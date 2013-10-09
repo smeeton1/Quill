@@ -1,0 +1,41 @@
+CC = gfortran
+CFLAGS = -llapack
+LIB = -llapack
+
+OBJECTS = supperoperator.o          \
+	  SOtest.o               
+
+
+%.o : %.f90
+	$(CC) $(CFLAGS) -c $<
+
+test: $(OBJECTS)
+	$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIB)
+
+
+
+
+supperoperator.o:
+
+SOtest.o: supperoperator.o 
+# all: Photrun
+# 
+# eigenSolve.o: eigenSolve.f90
+# 	$(CC) $(CFLAGS) eigenSolve.f90 $(LIB)
+# 
+# supperoperator.o: supperoperator.f90
+# 	$(CC) $(CFLAGS) supperoperator.f90
+# 
+# phoenv.o: phoenv.f90
+# 	$(CC) $(CFLAGS) phoenv.f90 eigenSolve.o supperoperator.o  $(LIB)
+# 
+# Photrun: phoenv.o eigenSolve.o supperoperator.o
+# 	$(CC) $(CFLAGS) phoenv.o eigenSolve.o supperoperator.o  $(LIB) -o Photrun
+
+
+
+
+
+
+clean:
+	rm *o *mod Photrun
