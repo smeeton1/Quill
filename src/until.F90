@@ -54,12 +54,12 @@ module until
   n=size(mat)
 
   open(4,file=filename,ACCESS='append',ACTION='write')
-  
+  write(4,*)''
   do i=1,n
    do j=1,n
-       write(4,"(F7.3,a,a,F7.3,a)")real(mat(i,j)),' ','i',aimag(mat(i,j)),' '
+       write(4,"(F7.3,a,a,F7.3,a)",ADVANCE='no')real(mat(i,j)),' ','i',aimag(mat(i,j)),' '
    enddo 
-   write(4,*)'\n'
+   write(4,*)''
   enddo
   close(4)
  
@@ -73,12 +73,29 @@ module until
   n=size(vec)
 
   open(4,file=filename,ACCESS='append',ACTION='write')
-
+  write(4,*)''
   do i=1,n
-    write(4,"(F7.3,a,a,F7.3,a)")real(vec(i)),' ','i',aimag(vec(i)),' '
+    write(4,"(F7.3,a,a,F7.3,a)",ADVANCE='no')real(vec(i)),' ','i',aimag(vec(i)),' '
   enddo
   close(4)
  
  end subroutine
+
+  
+ subroutine make_dir(dirname)
+  character(len=80),intent(in)          :: dirname 
+  character(len=90)			:: dirnames,directmk
+  logical                               :: dirtest
+
+  write(dirnames,'(a)')trim(dirname)
+  inquire(file=dirnames,exist=dirtest)
+ if(.not.dirtest)then
+  write(directmk,'(a,a)')'mkdir ',trim(dirname)
+  Call system(directmk)
+ endif
+
+
+ end subroutine
+
 
 end module

@@ -16,7 +16,7 @@ module Densutil
   sqn=int(sqrt(real(n)))
 
   norm=rho(1)
-
+  j=1
   do i=2,n
     if(i.eq.(j+sqn+1))then  
       norm=norm+rho(i)
@@ -35,13 +35,14 @@ module Densutil
 
   n=int(sqrt(real(size(rho))))
 
-  open(4,file=filename,ACCESS='append',ACTION='write')
-  
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,*)'Density Matrix Rho'
   do i=1,n
    do j=0,n-1
-       write(4,"(F7.3,a,a,F7.3,a)")real(rho(i+j*n)),' ','i',aimag(rho(i+j*n)),' '
+       write(4,"(F7.3,a,a,F7.3,a)",ADVANCE='no')real(rho(i+j*n)),' ','i',aimag(rho(i+j*n)),' '
    enddo 
-   write(4,*)'\n'
+   write(4,*)''
   enddo
   close(4)
 
@@ -52,16 +53,18 @@ module Densutil
  subroutine extract_pointerS(rho, point_state)
   complex(kdp),dimension(:),intent(in)   :: rho
   complex(kdp),dimension(:),intent(inout):: point_state
-  integer                                :: n, sqn, i, j
+  integer                                :: n, sqn, i, j,k
   
   n=size(rho)
   sqn=int(sqrt(real(n)))
-
-  norm=rho(1)
-
+  
+  point_state(1)=rho(1)
+  k=1
+  j=1
   do i=2,n
-    if(i.eq.(j+sqn+1))then  
-      point_state(i)=rho(i)
+    if(i.eq.(j+sqn+1))then 
+      k=k+1 
+      point_state(k)=rho(i)
       j=i
     endif
   enddo
