@@ -11,8 +11,9 @@ program photest
   integer                                      :: i, j,k, n
   real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err,alpha
   complex(EP), dimension(:,:), allocatable     :: H,D1,D2,SO,D3
-  complex(EP), dimension(:), allocatable       :: rho, rho_out
+  complex(EP), dimension(:), allocatable       :: rho, rho_out, psi
   real(8)                                      :: cpu_start, cpu_end,dt
+  complex(EP)				       :: norm
   character(len=80)                            :: fmt,filename,filename2,directmk
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
   logical                                      :: dirtest
@@ -28,7 +29,7 @@ program photest
   Hbar =  6.62606957e-34
   alpha = 1.0
 
-  allocate(H(n,n),rho(n*n),rho_out(n*n))
+  allocate(H(n,n),rho(n*n),rho_out(n*n),psi(n))
   allocate(SO(n*n,n*n),D1(n,n),D2(n,n),D3(n,n))
 
 
@@ -77,9 +78,28 @@ program photest
   !call A_D_to_SO(D2,SO)
 
   !write(*,*)'H=',H
-
+  filename='rho'
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
-  call write_rho(rho, 'rho')
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,"(a)")'In the before'
+  close(4)
+  call write_rho(rho,filename)
+  call extract_pointerS(rho, psi)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a)")'Pointer States'
+  close(4)
+  call write_Vec(filename,psi)
+  norm= get_Norm(rho)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")'norm= ',norm
+  close(4)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a)")'In the after'
+  close(4)
+
   t=1
   tmax=0.0
   dt=0.1
@@ -89,6 +109,19 @@ program photest
 
   call expm(SO,t,rho,rho_out)
 
+
+  call write_rho(rho_out,filename)
+  call extract_pointerS(rho_out, psi)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a)")'Pointer States'
+  close(4)
+  call write_Vec(filename,psi)
+  norm= get_Norm(rho_out)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")'norm= ',norm
+  close(4)
 
 !   open(3,file='results',STATUS='replace',ACTION='write')
 !   call CBM(H,rho,t)
@@ -111,7 +144,7 @@ program photest
  
 !enddo
 
- close(3)
+ !close(3)
 
 !  deallocate(array, eighold, work1, work2, leftvectors, rightvectors)
 !  deallocate(rho, H, theta0, theta1, theta2, tot)
