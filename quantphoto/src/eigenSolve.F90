@@ -1,10 +1,11 @@
 module eigenSolve
   implicit none 
-
-contains
+ Integer, parameter   :: kdp = selected_real_kind(15)
+ private              :: kdp
+ contains
   subroutine eigen(mat,v)
     complex(8), dimension(:,:), intent(in)  :: mat
-    complex(8), dimension(:), intent(out) :: v 
+    complex(8), dimension(:), intent(out)   :: v 
     interface 
        subroutine zgeev(JOBVL, JOBVR, N, A, LDA, W, VL, LDVL, VR, LDVR, WORK, & 
             & LWORK, RWORK, INFO) 

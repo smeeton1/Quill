@@ -13,7 +13,8 @@ OBJECTS = supperoperator.o          \
 	  eigenSolve.o            \
 	  phoenv.o               \
 	  solver.o              \
-	  until.o		
+	  until.o		\
+	  Densutil.o
 # 	  special.o             \
 # 	  utils.o               \
 # 	  types.o		\
@@ -33,6 +34,8 @@ eigenSolve.o:
 
 supperoperator.o:
 
+Densutil.o:
+
 # amos.o:
 # 
 # types.o:
@@ -49,7 +52,7 @@ solver.o: eigenSolve.o
 
 until.o: supperoperator.o
 
-phoenv.o: until.o supperoperator.o eigenSolve.o solver.o 
+phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o
 # all: Photrun
 # 
 # eigenSolve.o: eigenSolve.f90

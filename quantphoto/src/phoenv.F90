@@ -5,12 +5,13 @@ program photest
   use supperoperator
   use solver
   use until
+  use Densutil
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n
   real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err,alpha
   complex(EP), dimension(:,:), allocatable     :: H,D1,D2,SO,D3
-  complex(EP), dimension(:), allocatable       :: psi, psi_out
+  complex(EP), dimension(:), allocatable       :: rho, rho_out
   real(8)                                      :: cpu_start, cpu_end,dt
   character(len=80)                            :: fmt,filename,filename2,directmk
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
@@ -27,7 +28,7 @@ program photest
   Hbar =  6.62606957e-34
   alpha = 1.0
 
-  allocate(H(n,n),psi(n*n),psi_out(n*n))
+  allocate(H(n,n),rho(n*n),rho_out(n*n))
   allocate(SO(n*n,n*n),D1(n,n),D2(n,n),D3(n,n))
 
 
@@ -77,7 +78,8 @@ program photest
 
   !write(*,*)'H=',H
 
-  psi(:)=cmplx(0,0);psi(1)=cmplx(1,0)
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  call write_rho(rho, 'rho')
   t=1
   tmax=0.0
   dt=0.1
@@ -85,20 +87,20 @@ program photest
   call L_make_DG(SO,D3,alpha)
 
 
-  call expm(SO,t,psi,psi_out)
+  call expm(SO,t,rho,rho_out)
 
 
 !   open(3,file='results',STATUS='replace',ACTION='write')
-!   call CBM(H,psi,t)
-!   write(3,*)'t=',t,'Psi',psi*CONJG(psi)
-!   psi(:)=cmplx(0,0);psi(1)=cmplx(1,0)
-!   call rk45(H,psi,tmax,t,dt,err)
-!   write(3,*)'t=',t,'Psi',psi*CONJG(psi)
+!   call CBM(H,rho,t)
+!   write(3,*)'t=',t,'Psi',rho*CONJG(rho)
+!   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+!   call rk45(H,rho,tmax,t,dt,err)
+!   write(3,*)'t=',t,'Psi',rho*CONJG(rho)
 
   !
   !call Stand_to_SO(D3,SO)
 
-  !write(*,*)'psi=',psi
+  !write(*,*)'rho=',rho
 !   open(4,file='SO',STATUS='replace',ACTION='write')
 !   write(4,"(16F5.0)")real(SO)
 !   close(4)
@@ -112,7 +114,7 @@ program photest
  close(3)
 
 !  deallocate(array, eighold, work1, work2, leftvectors, rightvectors)
-!  deallocate(psi, H, theta0, theta1, theta2, tot)
+!  deallocate(rho, H, theta0, theta1, theta2, tot)
 end program
 
 

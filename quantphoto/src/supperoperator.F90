@@ -3,12 +3,15 @@
 
 module supperoperator
 implicit none
+
+ Integer, parameter   :: kdp = selected_real_kind(15)
+ private              :: kdp
  contains
 !make SO for the Hamiltonian only 
 subroutine B_SO_for_H(H,SO)
- complex(8), dimension(:,:), intent(in)     :: H
- complex(8), dimension(:,:), intent(inout)  :: SO
- integer                                    :: i,j,k,l,n
+ complex(kdp), dimension(:,:), intent(in)     :: H
+ complex(kdp), dimension(:,:), intent(inout)  :: SO
+ integer                                      :: i,j,k,l,n
 
 
  n=size(H,1)
@@ -48,9 +51,9 @@ end subroutine
 
 !adding in dephasing for the operator style <O|rho|O>
 subroutine A_D_to_SO(D,SO)
- complex(8), dimension(:,:), intent(in)     :: D
- complex(8), dimension(:,:), intent(inout)  :: SO
- integer                                    :: i,j,k,l,n
+ complex(kdp), dimension(:,:), intent(in)     :: D
+ complex(kdp), dimension(:,:), intent(inout)  :: SO
+ integer                                      :: i,j,k,l,n
 
 
  n=size(D,1)
@@ -77,9 +80,9 @@ end subroutine
 
 ! adds the dephasing for when it has the form: Ot rho O -1/2{Ot O , rho}
 subroutine Stand_to_SO(D,SO)
- complex(8), dimension(:,:), intent(in)     :: D
- complex(8), dimension(:,:), intent(inout)  :: SO
- integer                                    :: i,j,k,l,q,n
+ complex(kdp), dimension(:,:), intent(in)     :: D
+ complex(kdp), dimension(:,:), intent(inout)  :: SO
+ integer                                      :: i,j,k,l,q,n
 
 
  n=size(D,1)
