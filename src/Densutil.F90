@@ -8,18 +8,19 @@ module Densutil
  contains
 
  !gets the norm of the density matrix Tr(rho)
- complex(kdp) function get_Norm(rho) (norm)
+ complex(kdp) function get_Norm(rho) result(norm)
   complex(kdp),dimension(:),intent(in):: rho
-  integer                             :: n, sqn, i
+  integer                             :: n, sqn, i, j
   
   n=size(rho)
-  sqn=sqrt(n)
+  sqn=int(sqrt(real(n)))
 
   norm=rho(1)
 
   do i=2,n
-    if(i.eq.())then  
+    if(i.eq.(j+sqn+1))then  
       norm=norm+rho(i)
+      j=i
     endif
   enddo
 
@@ -30,12 +31,11 @@ module Densutil
  subroutine write_rho(rho, filename)
   complex(kdp),dimension(:),intent(in):: rho
   character(len=80),intent(in)        :: filename 
-  integer                             :: n, i,j
+  integer                             :: n, i, j
 
-  n=sqrt(size(rho))
+  n=int(sqrt(real(size(rho))))
 
-  open(4,file=filename,STATUS='append',ACTION='write')
-
+  open(4,file=filename,ACCESS='append',ACTION='write')
   
   do i=1,n
    do j=0,n-1
@@ -50,6 +50,22 @@ module Densutil
  !gets the pointer states from the density matrix
  !assumes these are the states along the diagonal
  subroutine extract_pointerS(rho, point_state)
+  complex(kdp),dimension(:),intent(in)   :: rho
+  complex(kdp),dimension(:),intent(inout):: point_state
+  integer                                :: n, sqn, i, j
+  
+  n=size(rho)
+  sqn=int(sqrt(real(n)))
+
+  norm=rho(1)
+
+  do i=2,n
+    if(i.eq.(j+sqn+1))then  
+      point_state(i)=rho(i)
+      j=i
+    endif
+  enddo
+
 
  end subroutine
 
