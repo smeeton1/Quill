@@ -26,25 +26,27 @@ subroutine B_SO_for_H(H,SO)
      do l=1,n
         if(i.eq.j)then
 	    if(k.eq.l)then
-             SO(i*n+k,j*n+l)=cmplx(0,1)*(H(i+1,i+1)-H(k,k))
+             SO(i*n+k,j*n+l)=-cmplx(0,1)*(H(i+1,i+1)-H(k,k))
             elseif(k.lt.l)then
              SO(i*n+k,j*n+l)=cmplx(0,1)*H(l,k)
             else
-	     SO(i*n+k,j*n+l)=-cmplx(0,1)*H(l,k)
+	     SO(i*n+k,j*n+l)=cmplx(0,1)*H(l,k)
 	    endif 
         elseif((i.ne.j).and.(k.eq.l))then
             if((i.ne.1).and.(j.eq.1))then
-              SO(i*n+k,j*n+l)=cmplx(0,1)*H(i+1,j+1)
+              SO(i*n+k,j*n+l)=-cmplx(0,1)*H(i+1,j+1)
             elseif((i.eq.1).and.(j.ne.1))then
-              SO(i*n+k,j*n+l)=cmplx(0,1)*H(i+1,j+1)
+              SO(i*n+k,j*n+l)=-cmplx(0,1)*H(i+1,j+1)
             else
-              SO(i*n+k,j*n+l)=cmplx(0,1)*H(i+1,j+1)
+              SO(i*n+k,j*n+l)=-cmplx(0,1)*H(i+1,j+1)
             endif
         endif
      enddo
     enddo
    enddo
  enddo
+
+
 
 end subroutine
 
@@ -103,9 +105,9 @@ subroutine Stand_to_SO(D,SO)
 	    SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)-0.5*D(i+1,q)-0.5*D(k,q)
         enddo
       elseif((i.lt.j).and.(k.eq.(i+1)).and.(l.eq.(j+1)))then
-       SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)+D(i+1,j+1)
+       SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)+D(l,k)
       elseif((i.gt.j).and.(k.eq.(i+1)).and.(l.eq.(j+1)))then
-       SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)+D(i+1,j+1)
+       SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)+D(l,k)
       endif
      enddo
     enddo

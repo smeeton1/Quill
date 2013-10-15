@@ -32,6 +32,7 @@ module until
   enddo
   
   call B_SO_for_H((1-alpha)*H,SO)
+  !call write_Mat('h',SO)
   call Stand_to_SO(alpha*D,SO)
 
   deallocate(H)
@@ -51,7 +52,7 @@ module until
   character(len=80),intent(in)          :: filename 
   integer                               :: n, i, j
 
-  n=size(mat)
+  n=size(mat,1)
 
   open(4,file=filename,ACCESS='append',ACTION='write')
   write(4,*)''

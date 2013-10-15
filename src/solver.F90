@@ -264,20 +264,20 @@ end subroutine
         call MatSetUp(A,ierr)
         call VecCreate(PETSC_COMM_WORLD,v,ierr)
         call VecSetSizes(v,PETSC_DECIDE,n,ierr)
-        call VecSetFromOptions(v,ierr)
-    
+        call VecSetFromOptions(v,ierr)    
         call VecDuplicate(v,y,ierr)
- 	call MatSetValues(A,SO,n,0,n,0,INSERT_VALUES,ierr)
 
-
+ 	call MatSetValues(A,n,[(i,i=0,n-1)],n,[(i,i=0,n-1)],SO,INSERT_VALUES,ierr)
 	call MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY,ierr)
  	call MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY,ierr)
+!        call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
 ! 
 !        !setting the vector
  	
 	call VecSetValues(v,n,[(i,i=0,n-1)],vin,INSERT_VALUES,ierr)
-        call VecAssemblyBegin(V,ierr)
-	call VecAssemblyEnd(V,ierr)
+        call VecAssemblyBegin(v,ierr)
+	call VecAssemblyEnd(v,ierr)
+!        call VecView(v,PETSC_VIEWER_STDOUT_WORLD,ierr)
 ! 
         call VecGetType(v,vecType,ierr)
         vecType = trim(adjustl(vecType))
@@ -303,6 +303,7 @@ end subroutine
         call MFNDestroy(mfn,ierr)
         call SlepcFinalize(ierr)
 
+!        call VecView(y,PETSC_VIEWER_STDOUT_WORLD,ierr)
 	call VecGetArrayF90(y,workArray,ierr)
         yout=workArray
 
