@@ -14,7 +14,7 @@ program photest
   complex(EP), dimension(:), allocatable       :: rho, rho_out, psi
   real(8)                                      :: cpu_start, cpu_end,dt
   complex(EP)				       :: norm
-  character(len=80)                            :: fmt,filename,filename2,directmk
+  character(len=80)                            :: fmt,filename,filename2,dirname
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
   logical                                      :: dirtest
   integer                                      :: info
@@ -22,12 +22,12 @@ program photest
   !open(6,file='test',STATUS='replace',ACTION='write')
 
 
-  n=4
+  n=3
   err = 0.0001
   Kb = 1.3806488e-23
   pi = 3.14159265359
   Hbar =  6.62606957e-34
-  alpha = 1.0
+  alpha = 0.5
 
   allocate(H(n,n),rho(n*n),rho_out(n*n),psi(n))
   allocate(SO(n*n,n*n),D1(n,n),D2(n,n),D3(n,n))
@@ -68,10 +68,10 @@ program photest
 !   H(5,1)=0;H(5,2)=0;H(5,3)=0;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=0
 !   H(6,1)=0;H(6,2)=0;H(6,3)=0;H(6,4)=0;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
 !   H(7,1)=0;H(7,2)=0;H(7,3)=0;H(7,4)=0;H(7,5)=0;H(7,6)=-38.3;H(7,7)=230
-  D3(1,1)=0;D3(1,2)=1;D3(1,3)=0.5;D3(1,4)=0;
-  D3(2,1)=0;D3(2,2)=0;D3(2,3)=1;D3(2,4)=0;
-  D3(3,1)=0;D3(3,2)=0;D3(3,3)=0;D3(3,4)=1;
-  D3(4,1)=1;D3(4,2)=0;D3(4,3)=0;D3(4,4)=0;  
+  D3(1,1)=0;D3(1,2)=1;D3(1,3)=0;!D3(1,4)=0;
+  D3(2,1)=0;D3(2,2)=0;D3(2,3)=1;!D3(2,4)=0;
+  D3(3,1)=1;D3(3,2)=0;D3(3,3)=0;!D3(3,4)=1;
+  !D3(4,1)=1;D3(4,2)=0;D3(4,3)=0;D3(4,4)=0;  
 
   !call B_SO_for_H(H,SO)
   !call A_D_to_SO(D1,SO)
@@ -80,7 +80,7 @@ program photest
   !write(*,*)'H=',H
   filename='rho'
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
   write(4,"(a)")'In the before'
   close(4)
   call write_rho(rho,filename)
@@ -99,12 +99,31 @@ program photest
   write(4,*)''
   write(4,"(a)")'In the after'
   close(4)
+ 
 
-  t=1
+  call Stand_to_SO(D3,SO)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a)")'SO no H'
+  write(4,*)size(SO,1)
+  write(4,*)size(SO,2)
+  close(4)
+  call write_Mat(filename,SO)
+
+
+  t=10
   tmax=0.0
   dt=0.1
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D3,alpha)
+
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a)")'SO'
+  write(4,*)size(SO,1)
+  write(4,*)size(SO,2)
+  close(4)
+  call write_Mat(filename,SO)
 
 
   call expm(SO,t,rho,rho_out)
@@ -137,7 +156,6 @@ program photest
 !   open(4,file='SO',STATUS='replace',ACTION='write')
 !   write(4,"(16F5.0)")real(SO)
 !   close(4)
-
 
 
 
