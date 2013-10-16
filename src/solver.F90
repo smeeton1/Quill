@@ -1,7 +1,8 @@
 module solver
 use eigenSolve
+use until
 !use special
-!implicit none
+implicit none
 
 
 
@@ -238,7 +239,8 @@ end subroutine
 	complex(kdp), dimension(:,:), intent(in)     :: SO
         complex(kdp), dimension(:), intent(in)       :: vin
         real(kdp),intent(in)                         :: tin
-        complex(kdp), dimension(:), intent(out)       :: yout
+        complex(kdp), dimension(:), intent(out)      :: yout
+        integer   				     :: i
         Vec         :: v
         Mat         :: A
         PetscScalar :: t
@@ -267,7 +269,7 @@ end subroutine
         call VecSetFromOptions(v,ierr)    
         call VecDuplicate(v,y,ierr)
 
- 	call MatSetValues(A,n,[(i,i=0,n-1)],n,[(i,i=0,n-1)],SO,INSERT_VALUES,ierr)
+ 	call MatSetValues(A,n,[(i,i=0,n-1)],n,[(i,i=0,n-1)],TRANSPOSE(SO),INSERT_VALUES,ierr)
 	call MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY,ierr)
  	call MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY,ierr)
 !        call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
@@ -294,16 +296,19 @@ end subroutine
         call MFNSetFunction(mfn,SLEPC_FUNCTION_EXP,ierr)
         call MFNSetFromOptions(mfn,ierr)
         
-        alpha = -t
-        call MatScale(A,alpha,ierr)
-        !call MFNSetScaleFactor(mfn, alpha,ierr)
+        alpha = t
+        !call MatScale(A,alpha,ierr)
+        call MFNSetScaleFactor(mfn, alpha,ierr)
         call MFNSolve(mfn,v,y,ierr)
-        call MatScale(A,1.d0/alpha,ierr)
+        !call MatScale(A,1.d0/alpha,ierr)
         
         call MFNDestroy(mfn,ierr)
         call SlepcFinalize(ierr)
 
-!        call VecView(y,PETSC_VIEWER_STDOUT_WORLD,ierr)
+
+!         call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
+!         call VecView(v,PETSC_VIEWER_STDOUT_WORLD,ierr)
+!         call VecView(y,PETSC_VIEWER_STDOUT_SELF,ierr)
 	call VecGetArrayF90(y,workArray,ierr)
         yout=workArray
 

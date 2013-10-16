@@ -48,9 +48,9 @@ Densutil.o:
 # 
 # special.o: amos.o types.o utils.o constants.o optimize.o
 
-solver.o: eigenSolve.o
-
 until.o: supperoperator.o
+
+solver.o: eigenSolve.o until.o
 
 phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o
 # all: Photrun

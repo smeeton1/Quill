@@ -101,14 +101,14 @@ program photest
   close(4)
  
 
-  call Stand_to_SO(D3,SO)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'SO no H'
-  write(4,*)size(SO,1)
-  write(4,*)size(SO,2)
-  close(4)
-  call write_Mat(filename,SO)
+!   call Stand_to_SO(D3,SO)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'SO no H'
+!   write(4,*)size(SO,1)
+!   write(4,*)size(SO,2)
+!   close(4)
+!   call write_Mat(filename,SO)
 
 
   t=10
@@ -117,13 +117,13 @@ program photest
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D3,alpha)
 
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'SO'
-  write(4,*)size(SO,1)
-  write(4,*)size(SO,2)
-  close(4)
-  call write_Mat(filename,SO)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'SO'
+!   write(4,*)size(SO,1)
+!   write(4,*)size(SO,2)
+!   close(4)
+!   call write_Mat(filename,SO)
 
 
   call expm(SO,t,rho,rho_out)
