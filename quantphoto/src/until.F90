@@ -30,9 +30,9 @@ module until
      end if
     enddo
   enddo
-  
+
+ 
   call B_SO_for_H((1-alpha)*H,SO)
-  !call write_Mat('h',SO)
   call Stand_to_SO(alpha*D,SO)
 
   deallocate(H)
@@ -58,7 +58,7 @@ module until
   write(4,*)''
   do i=1,n
    do j=1,n
-       write(4,"(F7.3,a,a,F7.3,a)",ADVANCE='no')real(mat(i,j)),' ','i',aimag(mat(i,j)),' '
+       write(4,"(F6.3,a,a,F6.3,a)",ADVANCE='no')real(mat(i,j)),' ','i',aimag(mat(i,j)),' '
    enddo 
    write(4,*)''
   enddo
@@ -76,7 +76,7 @@ module until
   open(4,file=filename,ACCESS='append',ACTION='write')
   write(4,*)''
   do i=1,n
-    write(4,"(F7.3,a,a,F7.3,a)",ADVANCE='no')real(vec(i)),' ','i',aimag(vec(i)),' '
+    write(4,"(F6.3,a,a,F6.3,a)",ADVANCE='no')real(vec(i)),' ','i',aimag(vec(i)),' '
   enddo
   close(4)
  
