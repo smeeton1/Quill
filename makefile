@@ -1,13 +1,13 @@
-tool= gcc
+tool= mine
 
-ifeq ($(tool), gcc)
+ifeq ($(tool), mine)
  CC = gfortran
  CFLAGS = 
  LIB = -llapack 
 else
- CC = ifort
- CFLAGS = -O3  -i8 -I$(MKLROOT)/include/intel64/ilp64 -I$(MKLROOT)/include
- LIB =  -L$(MKLROOT)/lib/intel64 $(MKLROOT)/lib/intel64/libmkl_blas95_ilp64.a $(MKLROOT)/lib/intel64/libmkl_lapack95_ilp64.a -lmkl_intel_ilp64 -lmkl_sequential -lmkl_core -lpthread -lm 
+ CC = gfortran
+ CFLAGS = 
+ LIB =  -llapack -lf77blas -lcblas -latlas 
 endif
 
 
