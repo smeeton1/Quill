@@ -272,7 +272,7 @@ end subroutine
  	call MatSetValues(A,n,[(i,i=0,n-1)],n,[(i,i=0,n-1)],TRANSPOSE(SO),INSERT_VALUES,ierr)
 	call MatAssemblyBegin(A,MAT_FINAL_ASSEMBLY,ierr)
  	call MatAssemblyEnd(A,MAT_FINAL_ASSEMBLY,ierr)
-!        call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
+!       call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
 ! 
 !        !setting the vector
  	
