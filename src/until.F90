@@ -19,6 +19,7 @@ module until
 
   n=size(D,1)
   allocate(H(n,n))
+!       call write_Mat('h',D)
    
   H(:,:)=cmplx(0,0)
 
@@ -33,7 +34,14 @@ module until
 
  
   call B_SO_for_H((1-alpha)*H,SO)
+  
+!     call write_Mat('h',H)
+!     call write_Mat('h',SO)
+    
+    
   call Stand_to_SO(alpha*D,SO)
+  
+!     call write_Mat('h',SO)  
 
   deallocate(H)
 

@@ -1,12 +1,12 @@
 tool= mine
 
 ifeq ($(tool), mine)
- CC = gfortran
- CFLAGS = 
- LIB = -llapack 
+ FLINKER = gfortran
+ FLAGS = 
+ LIB = -llapack -I /usr/lib/openmpi/include/
 else
- CC = gfortran
- CFLAGS = 
+ FLINKER = gfortran
+ FLAGS = 
  LIB =  -llapack -lf77blas -lcblas -latlas 
 endif
 
@@ -35,10 +35,10 @@ OBJECTS = supperoperator.o          \
 
 
 %.o : src/%.F90
-	$(CC) $(CFLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE)
+	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE)
 
 Photrun: $(OBJECTS)
-	$(CC) $(CFLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 
 eigenSolve.o:
