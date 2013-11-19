@@ -26,6 +26,9 @@ module until
  
  end subroutine
 
+ 
+ 
+ !write a complex matrix to the given file name. add to the file dose not over write the old content. 
  subroutine write_Mat(filename,mat)
   complex(kdp),dimension(:,:),intent(in):: mat
   character(len=80),intent(in)          :: filename 
@@ -45,7 +48,32 @@ module until
   close(4)
  
  end subroutine
+ 
+ 
+  !write real part of a matrix to the given file name. add to the file dose not over write the old content. 
+ subroutine write_Mat_real(filename,psi)
+  complex(kdp),dimension(:,:),intent(in):: mat
+  character(len=80),intent(in)          :: filename 
+  integer                               :: n, m, i, j
 
+  n=size(mat,1)
+  m=size(mat,2)
+
+  open(4,file=filename,ACCESS='append',ACTION='write')
+  write(4,*)''
+  do i=1,n
+   do j=1,m
+       write(4,"(F15.10,a)",ADVANCE='no')real(mat(i,j)),' '
+   enddo 
+   write(4,*)''
+  enddo
+  close(4)
+ 
+ end subroutine 
+ 
+ 
+ 
+ !write a complex vector to the given file name. add to the file dose not over write the old content. 
  subroutine write_Vec(filename,vec)
   complex(kdp),dimension(:),intent(in)  :: vec
   character(len=80),intent(in)          :: filename 
@@ -62,7 +90,7 @@ module until
  
  end subroutine
 
-  
+ !make a new dirctory. 
  subroutine make_dir(dirname)
   character(len=80),intent(in)          :: dirname 
   character(len=90)			:: dirnames,directmk

@@ -160,13 +160,16 @@ end subroutine
  end subroutine
  
  
- 
- subroutine Dir_Gra_Run(D, rho, t, alpha, filename, v)
+ ! performs a walk on a directed graph using open system methods and dose the walk from time 1 to t
+ ! extract the pointer states for each step.
+ ! if v is true more details are wrten to the file 
+ ! if r is true only writes out the real part of the pointer states.
+ subroutine Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(in)       :: rho
   real(kdp), intent(in)                        :: alpha
   integer, intent(in)                          :: t
-  logical, intent(in)                          :: v
+  logical, intent(in)                          :: v, r
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
@@ -209,8 +212,12 @@ end subroutine
     call extract_pointerS(rho_out, psi(i,1:n))
   enddo
   
-     
-  call write_Mat(filename,psi)
+  if(r)then
+    call write_Mat_real(filename,psi)
+  else
+    call write_Mat(filename,psi)
+  endif
+  
   
   if(v)then
     call write_rho(rho_out,filename)
