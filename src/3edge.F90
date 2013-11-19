@@ -29,6 +29,7 @@ program photest
   D(2,1)=1./2.;D(2,2)=0.0;D(2,3)=1./2.
   D(3,1)=1./2.;D(3,2)=1./2.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
   ! graph 2
@@ -37,6 +38,7 @@ program photest
   D(2,1)=1./2.;D(2,2)=0.0;D(2,3)=1./2.
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
   ! graph 3
@@ -45,6 +47,7 @@ program photest
   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
   ! graph 4
@@ -53,6 +56,7 @@ program photest
   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
   D(3,1)=1.;D(3,2)=0.0;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
   ! graph 5
@@ -61,6 +65,7 @@ program photest
   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=0.0
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
 end program
