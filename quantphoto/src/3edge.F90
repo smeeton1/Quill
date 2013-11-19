@@ -15,7 +15,7 @@ program photest
   complex(EP), dimension(:,:), allocatable     :: D
   complex(EP), dimension(:), allocatable       :: rho
   character(len=80)                            :: fmt,filename,dirname
-  logical                                      :: v
+  logical                                      :: v, r
   
   
   n=3
@@ -23,6 +23,7 @@ program photest
   alpha=0.8
   allocate(D(n,n),rho(n*n))
   v=.false.
+  r=.true.
   
   ! graph 1
   filename='graph_1'
@@ -31,7 +32,7 @@ program photest
   D(3,1)=1./2.;D(3,2)=1./2.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   write(*,*)filename
-  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
   ! graph 2
   filename='graph_2'
@@ -40,7 +41,7 @@ program photest
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   write(*,*)filename
-  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
   ! graph 3
   filename='graph_3'
@@ -49,7 +50,7 @@ program photest
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   write(*,*)filename
-  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
   ! graph 4
   filename='graph_4'
@@ -58,7 +59,7 @@ program photest
   D(3,1)=1.;D(3,2)=0.0;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   write(*,*)filename
-  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
   ! graph 5
   filename='graph_5'
@@ -67,7 +68,7 @@ program photest
   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   write(*,*)filename
-  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
   
 
