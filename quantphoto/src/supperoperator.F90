@@ -208,7 +208,8 @@ end subroutine
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i,1:n))
   enddo
-
+  
+     
   call write_Mat(filename,psi)
   
   if(v)then

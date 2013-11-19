@@ -259,6 +259,7 @@ end subroutine
 !         ! check if vector is sequential or MPI
  	t=tin
 ! 	!setting the matricies
+        call PetscInitialize(PETSC_NULL_CHARACTER,ierr)
         call SlepcInitialize(PETSC_NULL_CHARACTER,ierr)
         call MatCreate(PETSC_COMM_WORLD,A,ierr)
         call MatSetSizes(A,PETSC_DECIDE,PETSC_DECIDE,n,n,ierr)
@@ -317,7 +318,7 @@ end subroutine
         call MatDestroy(A,ierr)
         call MFNDestroy(mfn,ierr)
         call SlepcFinalize(ierr)
-        
+!        call PetscFinalize(ierr)        
     
     end subroutine expm
 

@@ -7,7 +7,8 @@ program photest
   use until
   use Densutil
   implicit none
-  
+
+ 
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n,t
   real(EP)                                     :: alpha
@@ -18,7 +19,7 @@ program photest
   
   
   n=3
-  t=2
+  t=10
   alpha=0.8
   allocate(D(n,n),rho(n*n))
   v=.false.
@@ -68,5 +69,7 @@ program photest
   write(*,*)filename
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
+  
+
 end program
   
