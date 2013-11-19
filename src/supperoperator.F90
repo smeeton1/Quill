@@ -167,7 +167,7 @@ end subroutine
   real(kdp), intent(in)                        :: alpha
   integer, intent(in)                          :: t
   logical, intent(in)                          :: v
-  character(len=80),intent(in)             :: filename
+  character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
   complex(kdp)                                 :: norm
