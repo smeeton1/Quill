@@ -25,13 +25,20 @@ OBJECTS = supperoperator.o          \
 	  phoenv.o               \
 	  solver.o              \
 	  until.o		\
-	  Densutil.o
+	  Densutil.o		
 # 	  special.o             \
 # 	  utils.o               \
 # 	  types.o		\
 # 	  optimize.o		\
 # 	  constants.o		\
 # 	  amos.o		
+
+OBJECTS3 = supperoperator.o          \
+	  eigenSolve.o            \
+	  solver.o              \
+	  until.o		\
+	  Densutil.o		\
+	  3edge.o		
 
 
 All: Photrun 3edge
@@ -42,8 +49,8 @@ All: Photrun 3edge
 Photrun: $(OBJECTS)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 	
-3edge: $(OBJECTS)
-	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+3edge: $(OBJECTS3)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS3) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 
 eigenSolve.o:

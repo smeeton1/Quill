@@ -29,14 +29,15 @@ module until
  subroutine write_Mat(filename,mat)
   complex(kdp),dimension(:,:),intent(in):: mat
   character(len=80),intent(in)          :: filename 
-  integer                               :: n, i, j
+  integer                               :: n, m, i, j
 
   n=size(mat,1)
+  m=size(mat,2)
 
   open(4,file=filename,ACCESS='append',ACTION='write')
   write(4,*)''
   do i=1,n
-   do j=1,n
+   do j=1,m
        write(4,"(F15.10,a,a,F15.10,a)",ADVANCE='no')real(mat(i,j)),' ','i',aimag(mat(i,j)),' '
    enddo 
    write(4,*)''

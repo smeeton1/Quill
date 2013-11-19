@@ -173,8 +173,8 @@ end subroutine
   complex(kdp)                                 :: norm
   complex(kdp), dimension(:), allocatable      :: rho_out  
   
-  n=size(rho)
-  allocate(SO(n*n,n*n),rho_out(n),psi(t,n))
+  n=size(D,1)
+  allocate(SO(n*n,n*n),rho_out(n*n),psi(t,n))
   
   
   if(v)then
@@ -217,6 +217,7 @@ end subroutine
     write(4,*)''
     write(4,"(a)")'Pointer States'
     close(4)
+    call write_Vec(filename,psi(t,1:n))
     norm= get_Norm(rho_out)
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)''
