@@ -312,10 +312,10 @@ end subroutine
 	call VecGetArrayF90(y,workArray,ierr)
         yout=workArray
 
-!         call VecRestoreArrayF90(y,workArray,ierr)
-!         call VecDestroy(y,ierr)
-!         call VecDestroy(v,ierr)
-!         call MatDestroy(A,ierr)
+        call VecRestoreArrayF90(y,workArray,ierr)
+        call VecDestroy(y,ierr)
+        call VecDestroy(v,ierr)
+        call MatDestroy(A,ierr)
         
     
     end subroutine expm

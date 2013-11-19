@@ -31,8 +31,37 @@ program photest
   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
   call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
+  ! graph 2
+  filename='graph_2'
+  D(1,1)=0.0;D(1,2)=0.0;D(1,3)=1.
+  D(2,1)=1./2.;D(2,2)=0.0;D(2,3)=1./2.
+  D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
+  ! graph 3
+  filename='graph_3'
+  D(1,1)=0.0;D(1,2)=1./2.;D(1,3)=1./2.
+  D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
+  D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
+  ! graph 4
+  filename='graph_4'
+  D(1,1)=0.0;D(1,2)=1.;D(1,3)=0.0
+  D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
+  D(3,1)=1.;D(3,2)=0.0;D(3,3)=0.0
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
+  
+  ! graph 5
+  filename='graph_5'
+  D(1,1)=0.0;D(1,2)=1./2.;D(1,3)=1./2.
+  D(2,1)=0.0;D(2,2)=0.0;D(2,3)=0.0
+  D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  call Dir_Gra_Run(D, rho, t, alpha, filename, v)
   
 end program
   
