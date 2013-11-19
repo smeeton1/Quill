@@ -302,8 +302,7 @@ end subroutine
         call MFNSolve(mfn,v,y,ierr)
         !call MatScale(A,1.d0/alpha,ierr)
         
-        call MFNDestroy(mfn,ierr)
-        call SlepcFinalize(ierr)
+
 
 
 !         call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
@@ -316,6 +315,8 @@ end subroutine
         call VecDestroy(y,ierr)
         call VecDestroy(v,ierr)
         call MatDestroy(A,ierr)
+        call MFNDestroy(mfn,ierr)
+        call SlepcFinalize(ierr)
         
     
     end subroutine expm
