@@ -21,7 +21,7 @@ program photest
   t=2
   alpha=0.8
   allocate(D(n,n),rho(n*n))
-  v=.true.
+  v=.false.
   
   ! graph 1
   filename='graph_1'
