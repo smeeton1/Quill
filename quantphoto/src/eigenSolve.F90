@@ -1,5 +1,13 @@
 module eigenSolve
-  implicit none 
+  use, intrinsic :: iso_c_binding
+  
+    implicit none 
+#include <fftw3.f>
+
+  
+  
+  
+  
  Integer, parameter   :: kdp = selected_real_kind(15)
  private              :: kdp
  contains
@@ -29,4 +37,24 @@ module eigenSolve
     v(:) = eigenvalues(:)
     deallocate(array, eigenvalues, work1, work2, leftvectors, rightvectors)
   end subroutine eigen
+  
+  
+  subroutine fftw_1D(in, out)
+    complex(8), dimension(:), intent(in)    :: in
+    complex(8), dimension(:), intent(out)   :: out 
+    integer(8)				    :: plan, N
+    
+    N=size(in)
+    call dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
+    call dfftw_execute_dft(plan, in, out)
+    call dfftw_destroy_plan(plan)
+  
+  end subroutine
+  
+  
+  
+  
+  
+  
+  
 end module eigenSolve

@@ -51,7 +51,7 @@ module until
  
  
   !write real part of a matrix to the given file name. add to the file dose not over write the old content. 
- subroutine write_Mat_real(filename,psi)
+ subroutine write_Mat_real(filename,mat)
   complex(kdp),dimension(:,:),intent(in):: mat
   character(len=80),intent(in)          :: filename 
   integer                               :: n, m, i, j
