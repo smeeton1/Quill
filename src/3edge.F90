@@ -19,7 +19,7 @@ program photest
   
   
   n=3
-  t=10
+  t=100
   alpha=0.8
   allocate(D(n,n),rho(n*n))
   v=.false.

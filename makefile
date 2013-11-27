@@ -3,11 +3,11 @@ tool= mine
 ifeq ($(tool), mine)
  FLINKER = gfortran
  FLAGS = -w
- LIB = -llapack -I /usr/lib/openmpi/include/
+ LIB = -lfftw3f -llapack -I /usr/lib/openmpi/include/ -I /usr/include
 else
  FLINKER = gfortran
  FLAGS = -w
- LIB =  -llapack -lf77blas -lcblas -latlas 
+ LIB =  -lfftw3f -llapack -lf77blas -lcblas -latlas 
 endif
 
 
