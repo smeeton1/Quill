@@ -1,9 +1,26 @@
 module eigenSolve
   use, intrinsic :: iso_c_binding
   
-    implicit none 
+  implicit none 
 #include <fftw3.f>
-
+    interface 
+       subroutine dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
+          complex(8), dimension(:)                :: in
+          complex(8), dimension(:)                :: out 
+          integer(8)				  :: plan,N
+          integer                                 :: FFTW_FORWARD,FFTW_ESTIMATE
+       end subroutine dfftw_plan_dft_1d
+       
+       subroutine dfftw_execute_dft(plan, in, out)
+          complex(8), dimension(:)                :: in
+          complex(8), dimension(:)                :: out 
+          integer(8)				  :: plan
+       end subroutine dfftw_execute_dft
+       
+       subroutine dfftw_destroy_plan(plan)
+          integer(8)				  :: plan
+       end subroutine dfftw_destroy_plan       
+    end interface
   
   
   
