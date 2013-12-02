@@ -62,7 +62,7 @@ module eigenSolve
     integer(8)				    :: plan, N
     
     N=size(in)
-    call dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
+    call dfftw_plan_dft_1d(plan,N,in,out,-1,0)
     call dfftw_execute_dft(plan, in, out)
     call dfftw_destroy_plan(plan)
   
