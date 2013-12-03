@@ -3,24 +3,24 @@ module eigenSolve
   
   implicit none 
 #include <fftw3.f>
-    interface 
-       subroutine dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
-          complex(8), dimension(:)                :: in
-          complex(8), dimension(:)                :: out 
-          integer(8)				  :: plan,N
-          integer                                 :: FFTW_FORWARD,FFTW_ESTIMATE
-       end subroutine dfftw_plan_dft_1d
-       
-       subroutine dfftw_execute_dft(plan, in, out)
-          complex(8), dimension(:)                :: in
-          complex(8), dimension(:)                :: out 
-          integer(8)				  :: plan
-       end subroutine dfftw_execute_dft
-       
-       subroutine dfftw_destroy_plan(plan)
-          integer(8)				  :: plan
-       end subroutine dfftw_destroy_plan       
-    end interface
+!     interface 
+!        subroutine dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
+!           complex(8), dimension(:)                :: in
+!           complex(8), dimension(:)                :: out 
+!           integer(8)				  :: plan,N
+!           integer                                 :: FFTW_FORWARD,FFTW_ESTIMATE
+!        end subroutine dfftw_plan_dft_1d
+!        
+!        subroutine dfftw_execute_dft(plan, in, out)
+!           complex(8), dimension(:)                :: in
+!           complex(8), dimension(:)                :: out 
+!           integer(8)				  :: plan
+!        end subroutine dfftw_execute_dft
+!        
+!        subroutine dfftw_destroy_plan(plan)
+!           integer(8)				  :: plan
+!        end subroutine dfftw_destroy_plan       
+!     end interface
   
   
   
@@ -28,6 +28,9 @@ module eigenSolve
  Integer, parameter   :: kdp = selected_real_kind(15)
  private              :: kdp
  contains
+ 
+ 
+ ! function to calculate the eiginvaules of a matrix using lapack
   subroutine eigen(mat,v)
     complex(8), dimension(:,:), intent(in)  :: mat
     complex(8), dimension(:), intent(out)   :: v 
@@ -56,13 +59,14 @@ module eigenSolve
   end subroutine eigen
   
   
+  ! dose the forward fft for complex vectors in 1 dimention using fftw it is not normallized.
   subroutine fftw_1D(in, out)
     complex(8), dimension(:), intent(in)    :: in
     complex(8), dimension(:), intent(out)   :: out 
     integer(8)				    :: plan, N
     
     N=size(in)
-    call dfftw_plan_dft_1d(plan,N,in,out,-1,0)
+    call dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,,FFTW_ESTIMATE)
     call dfftw_execute_dft(plan, in, out)
     call dfftw_destroy_plan(plan)
   
