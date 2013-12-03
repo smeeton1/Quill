@@ -59,17 +59,21 @@ module eigenSolve
   end subroutine eigen
   
   
-  ! dose the forward fft for complex vectors in 1 dimention using fftw it is not normallized.
+  ! dose the forward fft for complex vectors in 1 dimention using fftw 
   subroutine fftw_1D(in, out)
     complex(8), dimension(:), intent(in)    :: in
-    complex(8), dimension(:), intent(out)   :: out 
-    integer(8)				    :: plan, N
+    complex(8), dimension(:), intent(inout) :: out 
+    integer(8)				    :: plan, N, i
     
     N=size(in)
-    call dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,,FFTW_ESTIMATE)
+    call dfftw_plan_dft_1d(plan,N,in,out,FFTW_FORWARD,FFTW_ESTIMATE)
     call dfftw_execute_dft(plan, in, out)
     call dfftw_destroy_plan(plan)
   
+    do i=1,N
+    out(i)=out(i)/sqrt(real(N))
+    enddo
+ 
   end subroutine
   
   
