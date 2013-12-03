@@ -5,6 +5,7 @@ module supperoperator
 use until
 use solver
 use Densutil
+use func
 implicit none
 
  Integer, parameter   :: kdp = selected_real_kind(15)
@@ -179,9 +180,8 @@ end subroutine
   n=size(D,1)
   allocate(SO(n*n,n*n),rho_out(n*n),psi(t,n))
   
-  
+  open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
   if(v)then
-    open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
     write(4,"(a)")'In the before'
     close(4)
     call write_rho(rho,filename)
@@ -199,9 +199,8 @@ end subroutine
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)''
     write(4,"(a)")'In the after'
-    close(4)
   endif
-  
+  close(4) 
   
   
   SO(:,:)=cmplx(0,0)
