@@ -1,4 +1,4 @@
-module solver
+module func
 use eigenSolve
 use until
 !use special
@@ -16,7 +16,7 @@ implicit none
   complex(kdp), dimension(:), intent(in)    :: in
   complex(kdp),intent(out)                  :: moment
   complex(kdp), dimension(:), allocatable   :: out 
-  integer(kdp)				    :: N
+  integer(kdp)				    :: N, i
   complex(kdp)                              :: top, bottom
   
   N=size(in)
@@ -43,7 +43,7 @@ implicit none
   complex(kdp), dimension(:), intent(in)    :: in
   complex(kdp),intent(out)                  :: moment
   complex(kdp), dimension(:), allocatable   :: out 
-  integer(kdp)				    :: N
+  integer(kdp)				    :: N, i
   complex(kdp)                              :: top, bottom
   
   N=size(in)
