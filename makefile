@@ -25,7 +25,8 @@ OBJECTS = supperoperator.o          \
 	  phoenv.o               \
 	  solver.o              \
 	  until.o		\
-	  Densutil.o		
+	  Densutil.o		\
+	  func.o
 # 	  special.o             \
 # 	  utils.o               \
 # 	  types.o		\
@@ -38,6 +39,7 @@ OBJECTS3 = supperoperator.o          \
 	  solver.o              \
 	  until.o		\
 	  Densutil.o		\
+	  func.o		\
 	  3edge.o		
 
 
@@ -71,13 +73,15 @@ Densutil.o:
 
 until.o: 
 
+func.o: eigenSolve.o until.o
+
 solver.o: eigenSolve.o until.o
 
-supperoperator.o: until.o solver.o Densutil.o
+supperoperator.o: until.o solver.o Densutil.o func.o
 
-phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o
+phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o
 
-3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o
+3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o
 
 
 clean::

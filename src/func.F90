@@ -32,6 +32,8 @@ implicit none
   enddo
    
   moment=sqrt(top/bottom)
+  
+  deallocate(out)
  
  end subroutine
  
@@ -57,6 +59,8 @@ implicit none
   enddo
    
   moment=top/bottom
+  
+  deallocate(out)
  
  end subroutine
  
