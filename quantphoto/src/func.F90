@@ -64,6 +64,26 @@ implicit none
  
  end subroutine
  
+ subroutine write_moments(filename,in)
+  complex(kdp), dimension(:), intent(in)    :: in
+  complex(kdp)                              :: moment1, moment2
+  integer(kdp)				    :: n,n2, i
+  character(80), intent(in)                 :: filename
+  character(90)                             :: filename2
+ 
+  n=size(in,1)
+  n2=size(in,2)
+  write(filename2,'(a,a)')trim(filename),'_moments'
+  open(5,file=filename2,STATUS='replace',ACCESS='append',ACTION='write')
+  write(5,'(a,a,a,a,a)')'Node',' ','first moment',' ','second moment'
+  do i=1,n2
+   call first_moment(in(1:n,i), moment1)
+   call second_moment(in(1:n,i), moment2)
+   write(5,'(I3,2F8.5)')i,real(moment1),real(moment2)
+  enddo
+  close(5)
+ end subroutine
+ 
  subroutine k_product()
  
  end subroutine

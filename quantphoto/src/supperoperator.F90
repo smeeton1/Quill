@@ -174,8 +174,9 @@ end subroutine
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
-  complex(kdp)                                 :: norm
+  complex(kdp)                                 :: norm, moment1, moment2
   complex(kdp), dimension(:), allocatable      :: rho_out  
+  character(len=90)                            :: filename2
   
   n=size(D,1)
   allocate(SO(n*n,n*n),rho_out(n*n),psi(t,n))
@@ -217,6 +218,7 @@ end subroutine
     call write_Mat(filename,psi)
   endif
   
+  call write_moments(filename,psi)
   
   if(v)then
     call write_rho(rho_out,filename)
