@@ -14,16 +14,30 @@ program photest
   real(EP)                                     :: alpha
   complex(EP), dimension(:,:), allocatable     :: D
   complex(EP), dimension(:), allocatable       :: rho
-  character(len=80)                            :: fmt,filename,dirname
+  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA
   logical                                      :: v, r
   
   
+  
+ CALL GET_COMMAND_ARGUMENT(1,infile)
+ CALL GET_COMMAND_ARGUMENT(2,filename)
+ CALL GET_COMMAND_ARGUMENT(3,nn)
+ CALL GET_COMMAND_ARGUMENT(4,time)
+ CALL GET_COMMAND_ARGUMENT(5,AALPHA)
+ read(nn,*)n
+ read(time,*)t
+ read(AALPHA,*)alpha
+ 
+  
+ 
   n=3
   t=100
   alpha=0.8
   allocate(D(n,n),rho(n*n))
   v=.false.
   r=.true.
+  
+  call Read_Mat(infile,D)
   
   ! graph 1
   filename='graph_1'
