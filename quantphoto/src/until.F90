@@ -7,17 +7,25 @@ module until
 
 ! routine to read in a matrix from a file. Assumes that the file has only number. 
 ! mat should be sized for expected size of matrix.
+! mat file needs to currently be written in  vector form
  subroutine Read_Mat(Filename,mat)
   complex(kdp),dimension(:,:),intent(inout):: mat
   character(len=80),intent(in)             :: filename 
-  integer                                  :: n, i, j
+  real(kdp)                                :: one, two
+  integer                                  :: n, m, i, j
   
-  n=size(mat)
-  open(4,file=filename,ACCESS='append',ACTION='read')
+  n=size(mat,1)
+  m=size(mat,2)
+  open(4,file=filename,ACCESS='SEQUENTIAL',ACTION='read')
   do i=1,n
-   do j=1,n
-      read(4,"(F15.10)") mat(i,j)
+   do j=1,m!-1
+      read(4,"(2F4.2)") one,two
+      write(*,"(2F4.2)")one,two
+      mat(i,j)=cmplx(one,two)
    enddo
+!    read(4,"(2F4.2)") one,two
+!    write(*,"(2F4.2)")two,one
+!    mat(i,j)=cmplx(two,one)
   enddo
   
   
