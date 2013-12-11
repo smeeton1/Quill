@@ -20,12 +20,37 @@ module until
   do i=1,n
    do j=1,m!-1
       read(4,"(2F4.2)") one,two
+      mat(i,j)=cmplx(one,two)
+   enddo
+  enddo
+  
+  
+  close(4)
+  
+ 
+ end subroutine
+ 
+ 
+ 
+ ! same as above for matrix in matrix form not working right flips the all intreies afterthe second :(
+  subroutine Read_Mat_mf(Filename,mat)
+  complex(kdp),dimension(:,:),intent(inout):: mat
+  character(len=80),intent(in)             :: filename 
+  real(kdp)                                :: one, two
+  integer                                  :: n, m, i, j
+  
+  n=size(mat,1)
+  m=size(mat,2)
+  open(4,file=filename,ACCESS='SEQUENTIAL',ACTION='read')
+  do i=1,n
+   do j=1,m!-1
+      read(4,"(2F4.2)",ADVANCE='no') one,two
       write(*,"(2F4.2)")one,two
       mat(i,j)=cmplx(one,two)
    enddo
-!    read(4,"(2F4.2)") one,two
-!    write(*,"(2F4.2)")two,one
-!    mat(i,j)=cmplx(two,one)
+   read(4,"(2F4.2)") one,two
+   write(*,"(2F4.2)")two,one
+   mat(i,j)=cmplx(two,one)
   enddo
   
   
