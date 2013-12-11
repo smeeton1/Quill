@@ -65,7 +65,7 @@ implicit none
  end subroutine
  
  subroutine write_moments(filename,in)
-  complex(kdp), dimension(:), intent(in)    :: in
+  complex(kdp), dimension(:,:), intent(in)  :: in
   complex(kdp)                              :: moment1, moment2
   integer(kdp)				    :: n,n2, i
   character(80), intent(in)                 :: filename
