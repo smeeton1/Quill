@@ -206,6 +206,7 @@ end subroutine
   
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
+ ! call write_Mat('SO',SO)
 
   do i=1,t
     call expm(SO,real(i,kdp),rho,rho_out)

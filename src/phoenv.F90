@@ -85,7 +85,8 @@ program photest
 
   !write(*,*)'H=',H
   filename='rho'
-  rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
+  rho(:)=cmplx(0,0);rho(1)=cmplx(1./8.,0);rho(10)=cmplx(1./8.,0);rho(19)=cmplx(1./8.,0);rho(28)=cmplx(1./8.,0);
+  rho(37)=cmplx(1./8.,0);rho(46)=cmplx(1./8.,0);rho(55)=cmplx(1./8.,0);rho(64)=cmplx(1./8.,0);
   open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
   write(4,"(a)")'In the before'
   close(4)
