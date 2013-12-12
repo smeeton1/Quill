@@ -306,9 +306,9 @@ end subroutine
 
 
 
-!         call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
-!         call VecView(v,PETSC_VIEWER_STDOUT_WORLD,ierr)
-!         call VecView(y,PETSC_VIEWER_STDOUT_SELF,ierr)
+!          call MatView(A,PETSC_VIEWER_STDOUT_SELF,ierr)
+!          call VecView(v,PETSC_VIEWER_STDOUT_WORLD,ierr)
+!          call VecView(y,PETSC_VIEWER_STDOUT_SELF,ierr)
 	call VecGetArrayF90(y,workArray,ierr)
         yout=workArray
 
