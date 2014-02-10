@@ -1,6 +1,8 @@
-tool= mine
+MA?= mine
+path= obj/
+BINDIR= mod
 
-ifeq ($(tool), mine)
+ifeq ($(MA), mine)
  FLINKER = gfortran
  FLAGS = -w
  LIB =   -I /usr/lib/openmpi/include/ -I /usr/include -I /usr/local/lib/ -lfftw3 -llapack -lm
@@ -20,13 +22,13 @@ PETSC_ARCH_INCLUDE = -I$(PETSC_DIR)/$(PETSC_ARCH)/include
 
 
 
-OBJECTS = supperoperator.o          \
-	  eigenSolve.o            \
-	  phoenv.o               \
-	  solver.o              \
-	  until.o		\
-	  Densutil.o		\
-	  func.o
+OBJECTS = $(path)eigenSolve.o            \
+	  $(path)until.o		\
+	  $(path)Densutil.o		\
+	  $(path)solver.o              \
+	  $(path)func.o			\
+	  $(path)supperoperator.o          \
+	  $(path)phoenv.o               
 # 	  special.o             \
 # 	  utils.o               \
 # 	  types.o		\
@@ -34,19 +36,19 @@ OBJECTS = supperoperator.o          \
 # 	  constants.o		\
 # 	  amos.o		
 
-OBJECTS3 = supperoperator.o          \
-	  eigenSolve.o            \
-	  solver.o              \
-	  until.o		\
-	  Densutil.o		\
-	  func.o		\
-	  3edge.o		
+OBJECTS3 = $(path)supperoperator.o          \
+	   $(path)eigenSolve.o            \
+	   $(path)solver.o              \
+	   $(path)until.o		\
+	   $(path)Densutil.o		\
+	   $(path)func.o		\
+	   $(path)3edge.o		
 
 
 All: Photrun 3edge
 
-%.o : src/%.F90
-	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE)
+$(path)%.o : src/%.F90
+	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) -o $@ -J$(BINDIR)
 
 Photrun: $(OBJECTS)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
@@ -85,7 +87,7 @@ phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o
 
 
 clean::
-	rm *o *mod Photrun 3edge
+	rm obj/*o mod/*.mod Photrun 3edge
 
 
 .DEFAULT_GOAL := Photrun

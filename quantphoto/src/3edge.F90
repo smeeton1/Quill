@@ -36,11 +36,16 @@ program photest
   allocate(D(n,n),rho(n*n))
   v=.false.
   r=.true.
- write(*,*)size(D,1)
+! write(*,*)size(D,1)
   call Read_Mat(infile,D)
+  rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+  do i=1,n
+    rho(i+(i-1)*n)=cmplx(1./n,0.0)
+  enddo
+! call write_Mat('D',D) 
   call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   
- call write_Mat('D',D)
+
 
   
 !   ! graph 1
