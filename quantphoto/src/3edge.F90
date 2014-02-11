@@ -14,16 +14,17 @@ program photest
   real(EP)                                     :: alpha
   complex(EP), dimension(:,:), allocatable     :: D
   complex(EP), dimension(:), allocatable       :: rho
-  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase
+  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase
   logical                                      :: v, r
   
   
   
  CALL GET_COMMAND_ARGUMENT(1,infile)
  CALL GET_COMMAND_ARGUMENT(2,filenamebase)
- CALL GET_COMMAND_ARGUMENT(3,nn)
- CALL GET_COMMAND_ARGUMENT(4,time)
- CALL GET_COMMAND_ARGUMENT(5,AALPHA)
+  CALL GET_COMMAND_ARGUMENT(3,dirnamebase)
+ CALL GET_COMMAND_ARGUMENT(4,nn)
+ CALL GET_COMMAND_ARGUMENT(5,time)
+ CALL GET_COMMAND_ARGUMENT(6,AALPHA)
  read(nn,*)n
  read(time,*)t
  read(AALPHA,*)alpha
@@ -40,7 +41,7 @@ program photest
 ! write(*,*)size(D,1)
   call Read_Mat(infile,D)
   do j=1,k
-    write(dirname,*)k
+    write(dirname,*)trim(dirnamebase),k
     call make_dir(dirname)
     call Rand_Weight(D)
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
