@@ -84,6 +84,23 @@ implicit none
   close(5)
  end subroutine
  
+  subroutine Rand_Weight(D)
+  complex(kdp),dimension(:,:),intent(inout)  :: D
+  integer				     :: i,j,n,m
+  n=size(D,1)
+  m=size(d,2)
+  
+  do i=1,n
+    do j=1,m
+      if(D(i,j).ne.0)then
+       D(i,j)=5*rand()
+      endif
+    enddo
+  enddo
+  
+  
+ end subroutine
+ 
  subroutine k_product()
  
  end subroutine
