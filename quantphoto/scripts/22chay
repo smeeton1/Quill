@@ -1,0 +1,14 @@
+#!/bin/bash
+#PBS -W group_list=director772
+# The -W flag is mandatory and associates your job with your project group
+#PBS -q routequeue
+# This tells PBS which queue you want to send your job to
+# leaving it off will send it to the route queue
+#PBS -l walltime=10:00:00,select=1:mem=2gb:ncpus=1
+# Tells PBS what resources you require.
+# There are two ways of doing this since this version of PBS Pro.
+
+cd phd-code/quantphoto/
+/etc/profile.d/modules.sh
+module load fftw/3.3.3 petsc slepc
+./3edge graphs/22_1waycaly out results/22cly 22 100
