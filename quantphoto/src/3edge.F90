@@ -29,7 +29,7 @@ program photest
  read(time,*)t
  
 
- k=1
+ k=10
 !   n=3
 !   t=100
 !   alpha=0.1
