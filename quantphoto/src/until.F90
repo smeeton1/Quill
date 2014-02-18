@@ -153,7 +153,7 @@ module until
 
   write(dirnames,'(a)')trim(dirname)
   inquire(file=dirnames,exist=dirtest)
- if(.not.dirtest)then
+  if(.not.dirtest)then
   write(directmk,'(a,a)')'mkdir ',trim(dirname)
   Call system(directmk)
  endif
