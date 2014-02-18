@@ -6,11 +6,12 @@ program photest
   use solver
   use until
   use Densutil
+  use func
   implicit none
 
  
   integer, parameter :: EP = selected_real_kind(15)
-  integer                                      :: i, j,k, n,t
+  integer                                      :: i, j,k, n,t,l
   real(EP)                                     :: alpha
   complex(EP), dimension(:,:), allocatable     :: D
   complex(EP), dimension(:), allocatable       :: rho
@@ -21,16 +22,14 @@ program photest
   
  CALL GET_COMMAND_ARGUMENT(1,infile)
  CALL GET_COMMAND_ARGUMENT(2,filenamebase)
-  CALL GET_COMMAND_ARGUMENT(3,dirnamebase)
+ CALL GET_COMMAND_ARGUMENT(3,dirnamebase)
  CALL GET_COMMAND_ARGUMENT(4,nn)
  CALL GET_COMMAND_ARGUMENT(5,time)
- CALL GET_COMMAND_ARGUMENT(6,AALPHA)
  read(nn,*)n
  read(time,*)t
- read(AALPHA,*)alpha
  
 
- k=10
+ k=1
 !   n=3
 !   t=100
 !   alpha=0.1
@@ -39,7 +38,7 @@ program photest
   v=.false.
   r=.true.
 ! write(*,*)size(D,1)
-  call Read_Mat(infile,D)
+  call Read_MatR(infile,D)
   do j=1,k
     write(dirname,*)trim(dirnamebase),k
     call make_dir(dirname)
@@ -49,8 +48,11 @@ program photest
       rho(i+(i-1)*n)=cmplx(1./n,0.0)
     enddo
 !  call write_Mat('D',D) 
-    write(filename,*)trim(dirname),'/',trim(filenamebase)
-    call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+    do l=1,10
+      alpha=0.1*real(l)
+      write(filename,*)trim(dirname),'/',trim(filenamebase),alpha
+      call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+    enddo
   enddo
   
 
