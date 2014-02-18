@@ -40,11 +40,11 @@ module until
   m=size(mat,2)
   open(4,file=filename,ACCESS='SEQUENTIAL',ACTION='read')
   do i=1,n
-   do j=1,m!-1
-      read(4,"(2F4.2)",ADVANCE='no') one
+   do j=1,m-1
+      read(4,"(F4.2)",ADVANCE='no') one
       mat(i,j)=cmplx(one,0.0)
    enddo
-   read(4,"(2F4.2)") one
+   read(4,"(F4.2)") one
    mat(i,j)=cmplx(one,0.0)
   enddo
   
