@@ -167,7 +167,7 @@ end subroutine
  ! if r is true only writes out the real part of the pointer states.
  subroutine Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   complex(kdp), dimension(:,:), intent(in)     :: D
-  complex(kdp), dimension(:), intent(in)       :: rho
+  complex(kdp), dimension(:), intent(inout)    :: rho
   real(kdp), intent(in)                        :: alpha
   integer, intent(in)                          :: t
   logical, intent(in)                          :: v, r
@@ -219,7 +219,7 @@ end subroutine
     call write_Mat(filename,psi)
   endif
   
-  call write_moments(filename,psi)
+  !call write_moments(filename,psi)
   
   if(v)then
     call write_rho(rho_out,filename)
@@ -235,6 +235,8 @@ end subroutine
     close(4)
   endif
 
+  rho=psi(t,1:n)
+  
   deallocate(SO,rho_out,psi)
 
  end subroutine
