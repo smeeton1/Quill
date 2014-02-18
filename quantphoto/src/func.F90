@@ -101,6 +101,24 @@ implicit none
   
  end subroutine
  
+ subroutine Mat_Gen(D,porb)
+  complex(kdp),dimension(:,:),intent(inout)  :: D
+  real,intent(in)                            :: porb
+  integer				     :: i,j,n,m
+  n=size(D,1)
+  m=size(d,2)
+  
+  do i=1,n
+    do j=1,m
+      if(rand().eq.porb)then
+       D(i,j)=5*rand()
+      endif
+    enddo
+  enddo
+  
+  
+ end subroutine
+ 
  subroutine k_product()
  
  end subroutine
