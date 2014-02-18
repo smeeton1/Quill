@@ -88,7 +88,7 @@ implicit none
   complex(kdp),dimension(:,:),intent(inout)  :: D
   integer				     :: i,j,n,m
   n=size(D,1)
-  m=size(d,2)
+  m=size(D,2)
   
   do i=1,n
     do j=1,m
@@ -106,11 +106,12 @@ implicit none
   real,intent(in)                            :: porb
   integer				     :: i,j,n,m
   n=size(D,1)
-  m=size(d,2)
+  m=size(D,2)
   
+  D(:,:)=cmplx(0,0);
   do i=1,n
     do j=1,m
-      if(rand().eq.porb)then
+      if((rand().gt.porb).and.(i.ne.j))then
        D(i,j)=5*rand()
       endif
     enddo
