@@ -29,7 +29,7 @@ program photest
  read(time,*)t
  
  allocate(D(n,n),rho(n*n))
- k=1
+ k=1000
 !   n=3
 !   t=100
 !   alpha=0.1
