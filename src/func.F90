@@ -84,7 +84,7 @@ implicit none
   close(5)
  end subroutine
  
-  subroutine Rand_Weight(D)
+ subroutine Rand_Weight(D)
   complex(kdp),dimension(:,:),intent(inout)  :: D
   integer				     :: i,j,n,m
   n=size(D,1)
@@ -119,6 +119,26 @@ implicit none
   
   
  end subroutine
+ 
+ subroutine row_norm(D)
+  complex(kdp),dimension(:,:),intent(inout)  :: D
+  integer				     :: i,j,n,m
+  complex(kdp)  			     :: tot
+  n=size(D,1)
+  m=size(D,2)
+  
+  do i=1,n
+    tot=cmplx(0.0,0.0)
+    do j=1,m
+       tot = tot + D(i,j)
+    enddo
+    do j=1,m
+       D(i,J) = D(i,j)/tot
+    enddo
+  enddo
+    
+ end subroutine
+ 
  
  subroutine k_product()
  

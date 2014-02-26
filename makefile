@@ -28,6 +28,7 @@ OBJECTS = $(path)eigenSolve.o            \
 	  $(path)solver.o              \
 	  $(path)func.o			\
 	  $(path)supperoperator.o          \
+	  $(path)class.o          \
 	  $(path)phoenv.o               
 
 
@@ -37,6 +38,7 @@ OBJECTS3 = $(path)supperoperator.o          \
 	   $(path)until.o		\
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
+	   $(path)class.o          \
 	   $(path)3edge.o		
 
 OBJECTS4 = $(path)supperoperator.o          \
@@ -45,6 +47,7 @@ OBJECTS4 = $(path)supperoperator.o          \
 	   $(path)until.o		\
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
+	   $(path)class.o          \
 	   $(path)ranrun.o		
 
 All: Photrun 3edge ranrun
@@ -73,11 +76,13 @@ solver.o: eigenSolve.o until.o
 
 supperoperator.o: until.o solver.o Densutil.o func.o
 
-phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o
+class.o: until.o solver.o Densutil.o func.o
 
-3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o
+phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o
 
-ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o
+3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o
+
+ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o
 
 clean::
 	rm obj/*o mod/*.mod Photrun 3edge
