@@ -7,6 +7,7 @@ program photest
   use until
   use Densutil
   use func
+  use class
   implicit none
 
  
@@ -29,7 +30,7 @@ program photest
  read(time,*)t
  
 
- k=10
+ k=1
 !   n=3
 !   t=100
 !   alpha=0.1
@@ -57,6 +58,8 @@ program photest
       write(filename,'(3a,F3.1)')trim(dirname),'/',trim(filenamebase),alpha
       call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
     enddo
+    call row_norm(D)
+    call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
   enddo
   
 

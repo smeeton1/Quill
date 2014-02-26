@@ -235,6 +235,12 @@ end subroutine
     close(4)
   endif
 
+  
+  norm= get_Norm(rho_out)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")'norm= ',norm
+  close(4)
   rho=psi(t,1:n)
   
   deallocate(SO,rho_out,psi)
