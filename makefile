@@ -76,7 +76,7 @@ solver.o: eigenSolve.o until.o
 
 supperoperator.o: until.o solver.o Densutil.o func.o
 
-class.o: until.o solver.o Densutil.o func.o
+class.o: until.o solver.o Densutil.o func.o eigenSolve.o
 
 phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o
 
