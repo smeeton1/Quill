@@ -10,34 +10,39 @@ implicit none
  private              :: kdp
  contains
  
- subroutine pagerank_it(D, p, t, alpha, filename, v, r)
-   complex(kdp), dimension(:,:), intent(in)    :: D
+ subroutine pagerank_it(D, p, err, alpha, filename)
+  complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: p
-  real(kdp), intent(in)                        :: alpha
-  integer, intent(in)                          :: t
-  logical, intent(in)                          :: v, r
+  real(kdp), intent(in)                        :: alpha, err
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
-  complex(kdp), dimension(:,:), allocatable    :: SO, psi
-  complex(kdp)                                 :: norm, moment1, moment2
-  complex(kdp), dimension(:), allocatable      :: rho_out ,alpha2 
+  real(kdp)                                    :: error
+  complex(kdp)                                 :: norm
+  complex(kdp), dimension(:), allocatable      :: rho_out rho_out2 ,alpha2 
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(rho_out(n),alphs2(n)) 
+  allocate(rho_out(n),rho_out2(n),alphs2(n)) 
   rho_out = p
   
   alpha2(:)=cmplx((1.0-alpha),0.0)
   
-  rho_out = alpha*matmul(D,rho_out) + alphs2
+  do while (err.gt.error)
   
+   rho_out = rho_out2
+   rho_out2 = alpha*matmul(D,rho_out) + alphs2
   
+   error = maxval(abs(rho_out-rho_out2))
+  enddo
+  
+  p=rho_out2
+  deallocate(rho_out,rho_out2,alphs2)
  end subroutine
  
  
  
   subroutine pagerank_ei(D, p, alpha, filename, work)
-   complex(kdp), dimension(:,:), intent(in)    :: D
+  complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: p
   real(kdp), intent(in)                        :: alpha
   logical, intent(out)                         :: work
@@ -81,7 +86,7 @@ implicit none
    work=.false.
   endif
   
-  
+  deallocate(psi,SO,eig)
  end subroutine
  
  end module
