@@ -41,52 +41,52 @@ implicit none
  
  
  
-  subroutine pagerank_ei(D, p, alpha, filename, work)
-  complex(kdp), dimension(:,:), intent(in)     :: D
-  complex(kdp), dimension(:), intent(inout)    :: p
-  real(kdp), intent(in)                        :: alpha
-  logical, intent(out)                         :: work
-  character(len=80),intent(in)                 :: filename
-  integer                                      :: i,n,j
-  complex(kdp), dimension(:,:), allocatable    :: SO, psi
-  complex(kdp)                                 :: norm
-  complex(kdp), dimension(:), allocatable      :: eig  
+ subroutine pagerank_ei(D, p, alpha, filename, work)
+   complex(kdp), dimension(:,:), intent(in)     :: D
+   complex(kdp), dimension(:), intent(inout)    :: p
+   real(kdp), intent(in)                        :: alpha
+   logical, intent(out)                         :: work
+   character(len=80),intent(in)                 :: filename
+   integer                                      :: i,n,j
+   complex(kdp), dimension(:,:), allocatable    :: SO, psi
+   complex(kdp)                                 :: norm
+   complex(kdp), dimension(:), allocatable      :: eig  
   
-  n=size(D,1)
-  allocate(SO(n,n),psi(n,n),eig(n))
-  SO=D
-  do i=1,n
-    do j=1,n
-      D(i,j)=alpha*D(i,j)+(1.0-alpha)/real(n)
-    enddo
-  enddo
+   n=size(D,1)
+   allocate(SO(n,n),psi(n,n),eig(n))
+   SO=D
+   do i=1,n
+     do j=1,n
+       D(i,j)=alpha*D(i,j)+(1.0-alpha)/real(n)
+     enddo
+   enddo
+   
+   call eigenVecR(SO,eig,psi)
+   j=0
+   do i=1,n
+    if (1-eig(i)).lt.(0.000001)then
+     j=i
+     goto 99
+    endif
+   enddo
   
-  call eigenVecR(SO,eig,psi)
-  j=0
-  do i=1,n
-   if (1-eig(i)).lt.(0.000001)then
-    j=i
-    goto 99
+   99 continue
+   if (j).ne.0 then
+    call write_Vec(filename,psi(:,j)) 
+    p(:)=psi(:,j)
+    norm=Sum(psi(:,j))
+    open(4,file=filename,ACCESS='append',ACTION='write')
+    write(4,*)'Norm= ',norm
+    close(4)   
+    work=.true.
+   else
+    open(4,file=filename,ACCESS='append',ACTION='write')
+    write(4,*)'NO eigenvalue equal to 1'
+    close(4)
+    work=.false.
    endif
-  enddo
   
-  99 continue
-  if (j).ne.0 then
-   call write_Vec(filename,psi(:,j)) 
-   p(:)=psi(:,j)
-   norm=Sum(psi(:,j))
-   open(4,file=filename,ACCESS='append',ACTION='write')
-   write(4,*)'Norm= ',norm
-   close(4)   
-   work=.true.
-  else
-   open(4,file=filename,ACCESS='append',ACTION='write')
-   write(4,*)'NO eigenvalue equal to 1'
-   close(4)
-   work=.false.
-  endif
-  
-  deallocate(psi,SO,eig)
+   deallocate(psi,SO,eig)
  end subroutine
  
  end module
