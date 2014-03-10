@@ -40,27 +40,32 @@ program photest
   r=.true.
 ! write(*,*)size(D,1)
   call Read_MatR(infile,D)
-  do j=1,k
-    write(dirname,'(a,I5.5)')trim(dirnamebase),j 
-    call make_dir(dirname)
-    if(j.ne.1)then
-     call Rand_Weight(D)
-    endif
-    write(filename,'(3a)')trim(dirname),'/','D'
-    call write_Mat(filename,D)
-    rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-    do i=1,n
-      rho(i+(i-1)*n)=cmplx(1./n,0.0)
-    enddo
-!  call write_Mat('D',D) 
-    do l=1,10
-      alpha=0.1*real(l)
-      write(filename,'(3a,F3.1)')trim(dirname),'/',trim(filenamebase),alpha
-      call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-    enddo
-    call row_norm(D)
-    call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-  enddo
+    call pagerank_it(D, p, err, alpha, filename)
+     call pagerank_ei(D, p, alpha, filename, work)
+  call Dir_Gra_Con(D, rho, err, alpha, filename, r)
+!   do j=1,k
+!     write(dirname,'(a,I5.5)')trim(dirnamebase),j 
+!     call make_dir(dirname)
+!     if(j.ne.1)then
+!      call Rand_Weight(D)
+!     endif
+!     write(filename,'(3a)')trim(dirname),'/','D'
+!     call write_Mat(filename,D)
+!     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!     do i=1,n
+!       rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!     enddo
+! !  call write_Mat('D',D) 
+!     do l=1,10
+!       alpha=0.1*real(l)
+!       write(filename,'(3a,F3.1)')trim(dirname),'/',trim(filenamebase),alpha
+!       call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+!     enddo
+!     call row_norm(D)
+!     call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+!     call pagerank_it(D, p, err, alpha, filename)
+!     call pagerank_ei(D, p, alpha, filename, work)
+!   enddo
   
 
 

@@ -248,4 +248,53 @@ end subroutine
  end subroutine
 
 
+ subroutine Dir_Gra_Con(D, rho, err, alpha, filename, r)
+  complex(kdp), dimension(:,:), intent(in)     :: D
+  complex(kdp), dimension(:), intent(inout)    :: rho
+  real(kdp), intent(in)                        :: alpha,err
+  logical, intent(in)                          :: r
+  character(len=80),intent(in)                 :: filename
+  integer                                      :: i,n
+  complex(kdp), dimension(:,:), allocatable    :: SO, psi
+  complex(kdp)                                 :: norm
+  complex(kdp), dimension(:), allocatable      :: rho_out  
+  character(len=90)                            :: filename2
+  
+  n=size(D,1)
+  allocate(SO(n*n,n*n),rho_out(n*n),psi(2,n))
+    
+  SO(:,:)=cmplx(0,0)
+  call L_make_DG(SO,D,alpha)
+ ! call write_Mat('SO',SO)
+  call extract_pointerS(rho_out, psi(1,1:n))
+  i=50
+  do while (error.gt.err)
+    i=i+1
+    call expm(SO,real(i,kdp),rho,rho_out)
+    call extract_pointerS(rho_out, psi(2,1:n))
+    error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
+    psi(1,:)=psi(2,:)
+  enddo
+  
+  if(r)then
+    call write_Mat_real(filename,psi)
+  else
+    call write_Mat(filename,psi)
+  endif
+  
+  !call write_moments(filename,psi)
+  
+
+  call write_Vec(filename,psi(2,1:n))
+  norm= get_Norm(rho_out)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")'norm= ',norm
+  close(4)
+  rho=psi(2,1:n)
+  
+  deallocate(SO,rho_out,psi)
+
+ end subroutine
+ 
 end module
