@@ -27,7 +27,7 @@ implicit none
    real(kdp),intent(inout)                      :: h
    real(kdp),intent(in)                         :: t1,t2,err
 
-   integer                                     :: n,m,j,i
+   integer                                      :: n,m,j,i
    real(kdp)                                    :: diff, t 
    complex(kdp), dimension(:),allocatable       :: f1,f2,f3,f4,f5,f6
    complex(kdp), dimension(:),allocatable       :: rho1,rho2

@@ -13,11 +13,11 @@ program photest
  
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n,t,l
-  real(EP)                                     :: alpha
+  real(EP)                                     :: alpha, err
   complex(EP), dimension(:,:), allocatable     :: D
-  complex(EP), dimension(:), allocatable       :: rho
+  complex(EP), dimension(:), allocatable       :: rho, p
   character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase
-  logical                                      :: v, r
+  logical                                      :: v, r, work
   
   
   
@@ -29,18 +29,24 @@ program photest
  read(nn,*)n
  read(time,*)t
  
-
+ err=0.000001
  k=1
 !   n=3
 !   t=100
 !   alpha=0.1
-  allocate(D(n,n),rho(n*n))
+  allocate(D(n,n),rho(n*n),p(n))
 
   v=.false.
   r=.true.
 ! write(*,*)size(D,1)
   call Read_MatR(infile,D)
+  rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+     do i=1,n
+       rho(i+(i-1)*n)=cmplx(1./n,0.0)
+     enddo
+     call extract_pointerS(rho, p)
     call pagerank_it(D, p, err, alpha, filename)
+    call extract_pointerS(rho, p)
      call pagerank_ei(D, p, alpha, filename, work)
   call Dir_Gra_Con(D, rho, err, alpha, filename, r)
 !   do j=1,k
