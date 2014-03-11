@@ -254,6 +254,7 @@ end subroutine
   real(kdp), intent(in)                        :: alpha,err
   logical, intent(in)                          :: r
   character(len=80),intent(in)                 :: filename
+  real(kdp)                                    :: error
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
   complex(kdp)                                 :: norm
@@ -274,6 +275,8 @@ end subroutine
     call extract_pointerS(rho_out, psi(2,1:n))
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
+    write(*,*)error
+    write(*,*)psi
   enddo
   
   if(r)then
