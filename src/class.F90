@@ -44,7 +44,7 @@ implicit none
   open(4,file=filename,ACCESS='append',ACTION='write')
   write(4,*)'Norm= ',norm
   close(4)   
-  p=rho_out2
+!  p=rho_out2
   deallocate(rho_out,rho_out2,alpha2)
  end subroutine
  
@@ -82,7 +82,7 @@ implicit none
    99 continue
    if (j .ne. 0 )then
     call write_Vec(filename,psi(:,j)) 
-    p(:)=psi(:,j)
+!    p(:)=psi(:,j)
     norm=Sum(psi(:,j))
     open(4,file=filename,ACCESS='append',ACTION='write')
     write(4,*)'Norm= ',norm
