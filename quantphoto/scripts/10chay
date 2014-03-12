@@ -7,6 +7,7 @@
 # Tells PBS what resources you require.
 # There are two ways of doing this since this version of PBS Pro.
 
+export MODULEPATH=$MODULEPATH:/group/partner772/software/modulefiles
 cd phd-code/quantphoto/
 /etc/profile.d/modules.sh
 module load fftw/3.3.3 petsc slepc
