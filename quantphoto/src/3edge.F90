@@ -40,50 +40,76 @@ program photest
   r=.true.
 ! write(*,*)size(D,1)
   call Read_MatR(infile,D)
-  alpha=0.85
-  rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-     do i=1,n
-       rho(i+(i-1)*n)=cmplx(1./n,0.0)
-     enddo
-     call make_dir(dirnamebase)
-     write(filename,'(3a)')trim(dirnamebase),'/',trim(filenamebase)
-     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-     write(4,*)'itarive class'
-     close(4)
-     call extract_pointerS(rho, p)
-     call pagerank_it(D, p, err, alpha, filename)
-     call extract_pointerS(rho, p)
-     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-     write(4,*)'eigenvalue class'
-     close(4)
-     call pagerank_ei(D, p, alpha, filename, work)
-     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-     write(4,*)'itarive quantum'
-     close(4)
-  call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-!   do j=1,k
-!     write(dirname,'(a,I5.5)')trim(dirnamebase),j 
-!     call make_dir(dirname)
-!     if(j.ne.1)then
-!      call Rand_Weight(D)
-!     endif
-!     write(filename,'(3a)')trim(dirname),'/','D'
-!     call write_Mat(filename,D)
-!     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!     do i=1,n
-!       rho(i+(i-1)*n)=cmplx(1./n,0.0)
-!     enddo
-! !  call write_Mat('D',D) 
-!     do l=1,10
-!       alpha=0.1*real(l)
-!       write(filename,'(3a,F3.1)')trim(dirname),'/',trim(filenamebase),alpha
-!       call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!     enddo
-!     call row_norm(D)
-!     call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!     call pagerank_it(D, p, err, alpha, filename)
-!     call pagerank_ei(D, p, alpha, filename, work)
-!   enddo
+
+
+
+  do j=1,k
+    write(dirname,'(a,I5.5)')trim(dirnamebase),j 
+    call make_dir(dirname)
+    if(j.ne.1)then
+     call Rand_Weight(D)
+    endif
+    write(filename,'(3a)')trim(dirname),'/','D'
+    call write_Mat(filename,D)
+    rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+    do i=1,n
+      rho(i+(i-1)*n)=cmplx(1./n,0.0)
+    enddo
+!  call write_Mat('D',D) 
+
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)'itarive quantum non row normalized'
+    close(4)
+    do l=1,10
+      alpha=0.1*real(l)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)'alpha = ',alpha
+      close(4)
+      call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+    enddo
+        
+    call row_norm(D)
+    
+    rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+    do i=1,n
+      rho(i+(i-1)*n)=cmplx(1./n,0.0)
+    enddo
+    call extract_pointerS(rho, p)
+    
+    
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)'itarive quantum row normalized'
+    close(4)
+    do l=1,10
+      alpha=0.1*real(l)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)'alpha = ',alpha
+      close(4)
+      call Dir_Gra_Con(D, rho, err, alpha, filename, r)
+    enddo
+    
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)'itarive class'
+    close(4)
+    do l=1,10
+      alpha=0.1*real(l)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)'alpha = ',alpha
+      close(4)
+      call pagerank_it(D, p, err, alpha, filename)
+    enddo
+       
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)'eigenvalue class'
+    close(4)
+    do l=1,10
+      alpha=0.1*real(l)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)'alpha = ',alpha
+      close(4)
+      call pagerank_ei(D, p, alpha, filename, work)
+    enddo
+  enddo
   
 
 
