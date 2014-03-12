@@ -24,20 +24,26 @@ implicit none
   n=size(D,1)
   allocate(rho_out(n),rho_out2(n),alpha2(n)) 
   rho_out = p
-  
+  error=1
   alpha2(:)=cmplx((1.0-alpha),0.0)
   
-  do while (err.gt.error)
+  do while (error.gt.err)
   
-   rho_out = rho_out2
+
    rho_out2 = alpha*matmul(D,rho_out) + alpha2
   
    error = maxval(abs(rho_out-rho_out2))
-   write(*,*)error
-   write(*,*)rho_out
-   write(*,*)rho_out2
+!   write(*,*)error
+!    write(*,*)rho_out
+!    write(*,*)rho_out2
+   rho_out = rho_out2
   enddo
   
+  call write_Vec(filename,rho_out2) 
+  norm=Sum(rho_out2)
+  open(4,file=filename,ACCESS='append',ACTION='write')
+  write(4,*)'Norm= ',norm
+  close(4)   
   p=rho_out2
   deallocate(rho_out,rho_out2,alpha2)
  end subroutine

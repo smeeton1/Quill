@@ -267,16 +267,16 @@ end subroutine
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
  ! call write_Mat('SO',SO)
-  call extract_pointerS(rho_out, psi(1,1:n))
+  call extract_pointerS(rho, psi(1,:))
   i=50
+  error=1
+  rho_out(:)=cmplx(0,0)
   do while (error.gt.err)
     i=i+1
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(2,1:n))
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
-    write(*,*)error
-    write(*,*)psi
   enddo
   
   if(r)then
