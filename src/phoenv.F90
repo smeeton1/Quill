@@ -6,6 +6,7 @@ program photest
   use solver
   use until
   use Densutil
+  use class
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n
@@ -16,14 +17,14 @@ program photest
   complex(EP)				       :: norm
   character(len=80)                            :: fmt,filename,filename2,dirname
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
-  logical                                      :: dirtest
+  logical                                      :: dirtest,work
   integer                                      :: info
 
   !open(6,file='test',STATUS='replace',ACTION='write')
 
 
   n=8
-  err = 0.0001
+  err = 0.00001
   Kb = 1.3806488e-23
   pi = 3.14159265359
   Hbar =  6.62606957e-34
@@ -87,26 +88,27 @@ program photest
   filename='rho'
   rho(:)=cmplx(0,0);rho(1)=cmplx(1./8.,0);rho(10)=cmplx(1./8.,0);rho(19)=cmplx(1./8.,0);rho(28)=cmplx(1./8.,0);
   rho(37)=cmplx(1./8.,0);rho(46)=cmplx(1./8.,0);rho(55)=cmplx(1./8.,0);rho(64)=cmplx(1./8.,0);
-  open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
-  write(4,"(a)")'In the before'
-  close(4)
-  call write_rho(rho,filename)
+!   open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
+!   write(4,"(a)")'In the before'
+!   close(4)
+!   call write_rho(rho,filename)
   call extract_pointerS(rho, psi)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'Pointer States'
-  close(4)
-  call write_Vec(filename,psi)
-  norm= get_Norm(rho)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a,2F7.3)")'norm= ',norm
-  close(4)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'In the after'
-  close(4)
- 
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'Pointer States'
+!   close(4)
+!   call write_Vec(filename,psi)
+!   norm= get_Norm(rho)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a,2F7.3)")'norm= ',norm
+!   close(4)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'In the after'
+!   close(4)
+  call pagerank_ei(D3, psi, alpha, filename, work)
+  call pagerank_it(D3, psi, err, alpha, filename)
 
 
 !    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
