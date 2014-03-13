@@ -13,11 +13,11 @@ program photest
  
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n,t,l
-  real(EP)                                     :: alpha
+  real(EP)                                     :: alpha, err
   complex(EP), dimension(:,:), allocatable     :: D
-  complex(EP), dimension(:), allocatable       :: rho
+  complex(EP), dimension(:), allocatable       :: rho,p
   character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase
-  logical                                      :: v, r
+  logical                                      :: v, r, work
   
   
   
@@ -28,8 +28,8 @@ program photest
  CALL GET_COMMAND_ARGUMENT(4,time)
  read(nn,*)n
  read(time,*)t
- 
- allocate(D(n,n),rho(n*n))
+ err=0.000001
+ allocate(D(n,n),rho(n*n),p(n))
  k=1000
 !   n=3
 !   t=100
