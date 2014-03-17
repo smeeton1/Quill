@@ -26,23 +26,19 @@ implicit none
   rho_out = p
   error=1
   alpha2(:)=cmplx((1.0-alpha),0.0)
-  
   do while (error.gt.err)
-  
 
    rho_out2 = alpha*matmul(D,rho_out) + alpha2
   
    error = maxval(abs(rho_out-rho_out2))
-!   write(*,*)error
-!    write(*,*)rho_out
-!    write(*,*)rho_out2
+
    rho_out = rho_out2
   enddo
-  
   call write_Vec(filename,rho_out2) 
   norm=Sum(rho_out2)
+  call write_Vec(filename,rho_out2/norm)
   open(4,file=filename,ACCESS='append',ACTION='write')
-  write(4,*)'Norm= ',norm
+  write(4,*)' Norm= ',real(norm)
   close(4)   
 !  p=rho_out2
   deallocate(rho_out,rho_out2,alpha2)
@@ -71,6 +67,7 @@ implicit none
    enddo
    
    call eigenVecR(SO,eigs,psi)
+   call write_Vec(filename,eigs)
    j=0
    do i=1,n
     if ( (1.0-real(eigs(i))) .lt. (0.000001)) then
@@ -78,14 +75,15 @@ implicit none
      goto 99
     endif
    enddo
-  
+   
    99 continue
    if (j .ne. 0 )then
     call write_Vec(filename,psi(:,j)) 
 !    p(:)=psi(:,j)
-    norm=Sum(psi(:,j))
+    norm=Sum(psi(:,j)) 
+    call write_Vec(filename,psi(:,j)/norm)
     open(4,file=filename,ACCESS='append',ACTION='write')
-    write(4,*)'Norm= ',norm
+    write(4,*)' Norm= ',real(norm)
     close(4)   
     work=.true.
    else

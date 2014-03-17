@@ -1,6 +1,6 @@
 MA?= mine
-path= obj/
-BINDIR= mod
+path?= obj/
+BINDIR?= mod
 
 ifeq ($(MA), mine)
  FLINKER = gfortran

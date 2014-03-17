@@ -181,7 +181,7 @@ end subroutine
   n=size(D,1)
   allocate(SO(n*n,n*n),rho_out(n*n),psi(t,n))
   
-  open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   if(v)then
     write(4,"(a)")'In the before'
     close(4)
@@ -241,7 +241,7 @@ end subroutine
   write(4,*)''
   write(4,"(a,2F7.3)")'norm= ',norm
   close(4)
-  rho=psi(t,1:n)
+  rho=rho_out
   
   deallocate(SO,rho_out,psi)
 
@@ -268,7 +268,7 @@ end subroutine
   call L_make_DG(SO,D,alpha)
  ! call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,:))
-  i=50
+  i=1
   error=1
   rho_out(:)=cmplx(0,0)
   do while (error.gt.err)
@@ -292,9 +292,9 @@ end subroutine
   norm= get_Norm(rho_out)
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   write(4,*)''
-  write(4,"(a,2F7.3)")'norm= ',norm
+  write(4,"(a,2F7.3)")' norm= ',norm
   close(4)
-  rho=psi(2,1:n)
+  rho=rho_out
   
   deallocate(SO,rho_out,psi)
 
