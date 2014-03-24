@@ -30,7 +30,7 @@ program photest
  read(time,*)t
  
  err=0.000001
- k=1
+ k=10
 !   n=3
 !   t=100
 !   alpha=0.1
@@ -102,6 +102,9 @@ program photest
       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
     enddo
+    
+    
+
     
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
