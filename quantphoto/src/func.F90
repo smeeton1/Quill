@@ -139,6 +139,24 @@ implicit none
     
  end subroutine
  
+  subroutine col_norm(D)
+  complex(kdp),dimension(:,:),intent(inout)  :: D
+  integer				     :: i,j,n,m
+  complex(kdp)  			     :: tot
+  n=size(D,1)
+  m=size(D,2)
+  
+  do i=1,n
+    tot=cmplx(0.0,0.0)
+    do j=1,m
+       tot = tot + D(j,i)
+    enddo
+    do j=1,m
+       D(j,i) = D(j,i)/tot
+    enddo
+  enddo
+    
+ end subroutine
  
  subroutine k_product()
  

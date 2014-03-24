@@ -25,7 +25,7 @@ implicit none
   allocate(rho_out(n),rho_out2(n),alpha2(n)) 
   rho_out = p
   error=1
-  alpha2(:)=cmplx((1.0-alpha),0.0)
+  alpha2(:)=cmplx((1.0-alpha),0.0)/real(n)
   do while (error.gt.err)
 
    rho_out2 = alpha*matmul(D,rho_out) + alpha2
