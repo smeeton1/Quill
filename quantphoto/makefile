@@ -9,7 +9,7 @@ ifeq ($(MA), mine)
 else
  FLINKER = gfortran
  FLAGS = -w
- LIB =  -L$(FFTW_LIB)-lfftw3 -llapack -lf77blas -lcblas -latlas 
+ LIB =  -L$(FFTW_LIB) -lfftw3 -llapack -lf77blas -lcblas -latlas 
 endif
 
 
