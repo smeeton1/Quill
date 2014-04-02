@@ -41,8 +41,6 @@ program photest
 ! write(*,*)size(D,1)
   call Read_MatR(infile,D)
 
-
-
   do j=1,k
     write(dirname,'(a,I5.5)')trim(dirnamebase),j 
     call make_dir(dirname)
