@@ -30,7 +30,7 @@ module until
  
  end subroutine
  
- subroutine Read_MatR(Filename,mat)
+ subroutine Read_MatR(filename,mat)
   complex(kdp),dimension(:,:),intent(inout):: mat
   character(len=80),intent(in)             :: filename 
   real(kdp)                                :: one
@@ -38,6 +38,7 @@ module until
   
   n=size(mat,1)
   m=size(mat,2)
+  mat(:,:)=cmplx(0.0,0.0)
   open(4,file=filename,ACCESS='SEQUENTIAL',ACTION='read')
   do i=1,n
    do j=1,m-1
@@ -50,7 +51,6 @@ module until
   
   
   close(4)
-  
  
  end subroutine
  
