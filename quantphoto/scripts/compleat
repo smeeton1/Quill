@@ -12,4 +12,4 @@ export MODULEPATH=$MODULEPATH:/group/partner772/software/modulefiles
 cd phd-code/quantphoto/
 /etc/profile.d/modules.sh
 module load fftw/3.3.3 petsc slepc
-./3edge graphs/compleat out results/compleat 10 100
+mpirun -np 1 ./3edge graphs/compleat out results/compleat 10 100
