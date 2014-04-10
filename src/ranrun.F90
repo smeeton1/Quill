@@ -30,7 +30,7 @@ program photest
  read(time,*)t
  err=0.000001
  allocate(D(n,n),rho(n*n),p(n),D2(3,3),rho2(9))
- k=100
+ k=1
 !   n=3
 !   t=100
 !   alpha=0.1
@@ -140,9 +140,9 @@ program photest
    !graph 1
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_1')
    call make_dir(dirname)
-   D2(1,1)=0;D2(1,2)=1;D2(1,3)=0
-   D2(1,1)=0;D2(1,2)=0;D2(1,3)=1
-   D2(1,1)=1;D2(1,2)=0;D2(1,3)=0
+   D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=0.
+   D2(1,1)=0.;D2(1,2)=0.;D2(1,3)=1.
+   D2(1,1)=1.;D2(1,2)=0.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
    do l=1,10
@@ -159,9 +159,9 @@ program photest
     !graph 2
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_2')
    call make_dir(dirname)
-   D2(1,1)=0;D2(1,2)=1;D2(1,3)=0
-   D2(1,1)=1;D2(1,2)=0;D2(1,3)=1
-   D2(1,1)=1;D2(1,2)=1;D2(1,3)=0
+   D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=0.
+   D2(1,1)=1.;D2(1,2)=0.;D2(1,3)=1.
+   D2(1,1)=1.;D2(1,2)=1.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
    do l=1,10
@@ -177,9 +177,9 @@ program photest
     !graph 3
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_3')
    call make_dir(dirname)
-   D2(1,1)=0;D2(1,2)=1;D2(1,3)=1
-   D2(1,1)=1;D2(1,2)=0;D2(1,3)=1
-   D2(1,1)=0;D2(1,2)=0;D2(1,3)=0
+   D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=1.
+   D2(1,1)=1.;D2(1,2)=0.;D2(1,3)=1.
+   D2(1,1)=0.;D2(1,2)=0.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
    do l=1,10
@@ -195,9 +195,9 @@ program photest
     !graph 4
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_4')
    call make_dir(dirname)
-   D2(1,1)=0;D2(1,2)=1;D2(1,3)=0
-   D2(1,1)=1;D2(1,2)=0;D2(1,3)=1
-   D2(1,1)=1;D2(1,2)=0;D2(1,3)=0
+   D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=0.
+   D2(1,1)=1.;D2(1,2)=0.;D2(1,3)=1.
+   D2(1,1)=1.;D2(1,2)=0.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
    do l=1,10
@@ -213,9 +213,9 @@ program photest
     !graph 5
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_5')
    call make_dir(dirname)
-   D2(1,1)=0;D2(1,2)=1;D2(1,3)=0
-   D2(1,1)=0;D2(1,2)=0;D2(1,3)=0
-   D2(1,1)=1;D2(1,2)=1;D2(1,3)=0
+   D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=0.
+   D2(1,1)=0;.D2(1,2)=0.;D2(1,3)=0.
+   D2(1,1)=1.;D2(1,2)=1.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
    do l=1,10
