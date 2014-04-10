@@ -214,7 +214,7 @@ program photest
    write(dirname,'(3a)')trim(dirnamebase),'/',trim('graph_5')
    call make_dir(dirname)
    D2(1,1)=0.;D2(1,2)=1.;D2(1,3)=0.
-   D2(1,1)=0;.D2(1,2)=0.;D2(1,3)=0.
+   D2(1,1)=0.;D2(1,2)=0.;D2(1,3)=0.
    D2(1,1)=1.;D2(1,2)=1.;D2(1,3)=0.
    write(filename,'(3a)')trim(dirname),'/','D'
    call write_Mat(filename,D2) 
