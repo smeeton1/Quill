@@ -14,7 +14,7 @@ program photest
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n,t,l
   real(EP)                                     :: alpha, err
-  complex(EP), dimension(:,:), allocatable     :: D
+  complex(EP), dimension(:,:), allocatable     :: D,D2
   complex(EP), dimension(:), allocatable       :: rho, p
   character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase
   logical                                      :: v, r, work
@@ -34,7 +34,7 @@ program photest
 !   n=3
 !   t=100
 !   alpha=0.1
-  allocate(D(n,n),rho(n*n),p(n))
+  allocate(D(n,n),rho(n*n),p(n),D2(n,n))
 
   v=.true.
   r=.true.
@@ -72,7 +72,8 @@ program photest
       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
     enddo
-        
+    
+    D2=D
     call row_norm(D)
     
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
@@ -81,7 +82,7 @@ program photest
     enddo
     call extract_pointerS(rho, p)
     
-    
+    call col_norm(D2)
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
     write(4,*)'------------------------------------------------------------------------------'
@@ -116,7 +117,7 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_it(D, p, err, alpha, filename)
+      call pagerank_it(D2, p, err, alpha, filename)
     enddo
        
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -131,7 +132,7 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_ei(D, p, alpha, filename, work)
+      call pagerank_ei(D2, p, alpha, filename, work)
     enddo
   enddo
   
