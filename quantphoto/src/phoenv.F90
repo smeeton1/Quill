@@ -13,7 +13,7 @@ program photest
   real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err,alpha
   complex(EP), dimension(:,:), allocatable     :: H,D1,D2,SO,D3
   complex(EP), dimension(:), allocatable       :: rho, rho_out, psi
-  real(8)                                      :: cpu_start, cpu_end,dt,err
+  real(8)                                      :: cpu_start, cpu_end,dt
   complex(EP)				       :: norm
   character(len=80)                            :: fmt,filename,filename2,dirname
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
