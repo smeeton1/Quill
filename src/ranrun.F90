@@ -117,25 +117,25 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call Dir_Gra_Con(D2, rho, err, alpha, filename, r)
+      call Dir_Gra_Con(D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'-D'
       close(4)
-      call Dir_Gra_Con(-D2, rho, err, alpha, filename, r)
+      call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
-      call Dir_Gra_Con(Transpose(D2), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose -D'
       close(4)
-      call Dir_Gra_Con(Transpose(-D2), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
     enddo
     
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
