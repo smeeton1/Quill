@@ -271,7 +271,7 @@ end subroutine
   i=1
   error=1
   rho_out(:)=cmplx(0,0)
-  do while (error.gt.err)
+  do while ((error.gt.err).or.(i.gt.10000))
     i=i+1
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(2,1:n))
