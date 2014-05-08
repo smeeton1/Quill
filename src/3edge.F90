@@ -117,7 +117,7 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_it(D2, p, err, alpha, filename)
+      call pagerank_it(Transpose(D), p, err, alpha, filename)
     enddo
        
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -132,7 +132,7 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_ei(D2, p, alpha, filename, work)
+      call pagerank_ei(Transpose(D), p, alpha, filename, work)
     enddo
   enddo
   
