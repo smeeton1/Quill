@@ -92,7 +92,7 @@ program photest
       call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
     enddo
     D2=D    
-    call row_norm(D2)
+    call row_norm(D)
     
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
     do i=1,n
@@ -100,7 +100,7 @@ program photest
     enddo
     call extract_pointerS(rho, p)
     
-    call col_norm(D)
+    call col_norm(D2)
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
     write(4,*)'------------------------------------------------------------------------------'
