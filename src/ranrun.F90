@@ -72,24 +72,24 @@ program photest
       write(4,*)'alpha = ',alpha
       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'-D'
-      close(4)
-      call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'--------------------------------------------------------------------------------'
+!       write(4,*)'-D'
+!       close(4)
+!       call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
       call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'Transpose -D'
-      close(4)
-      call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'--------------------------------------------------------------------------------'
+!       write(4,*)'Transpose -D'
+!       close(4)
+!       call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
     enddo
     D2=D    
     call row_norm(D)
@@ -118,24 +118,24 @@ program photest
       write(4,*)'alpha = ',alpha
       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'-D'
-      close(4)
-      call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'--------------------------------------------------------------------------------'
+!       write(4,*)'-D'
+!       close(4)
+!       call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
       call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'Transpose -D'
-      close(4)
-      call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'--------------------------------------------------------------------------------'
+!       write(4,*)'Transpose -D'
+!       close(4)
+!       call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
     enddo
     
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -150,25 +150,25 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_it(D, p, err, alpha, filename)
+       call pagerank_it(D2, p, err, alpha, filename)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'-D'
+      write(4,*)'row D'
       close(4)
-      call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
+     call Dir_Gra_Con(D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
-      call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(D2), rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'Transpose -D'
+      write(4,*)'Transpose row D'
       close(4)
-      call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
     enddo
        
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -183,25 +183,25 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
-      call pagerank_ei(D, p, alpha, filename, work)
+      call pagerank_ei(D2, p, alpha, filename, work)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'-D'
+      write(4,*)'row D'
       close(4)
-      call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
+      call Dir_Gra_Con(D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
-      call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(D2), rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
-      write(4,*)'Transpose -D'
+      write(4,*)'Transpose row D'
       close(4)
-      call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
+      call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
     enddo
    enddo
 
