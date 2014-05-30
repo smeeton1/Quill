@@ -30,10 +30,10 @@ program photest
  read(time,*)t
  
  err=0.000001
- k=10
+ k=2
 !   n=3
 !   t=100
-!   alpha=0.1
+   alpha=0.8
   allocate(D(n,n),rho(n*n),p(n),D2(n,n))
 
   v=.true.
@@ -59,19 +59,19 @@ program photest
     write(4,*)'------------------------------------------------------------------------------'
     write(4,*)'itarive quantum non row normalized'
     close(4)
-    do l=1,10
-        rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-      do i=1,n
-         rho(i+(i-1)*n)=cmplx(1./n,0.0)
-      enddo
-      alpha=0.1*real(l)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'******************************************************************************'
-      write(4,*)'alpha = ',alpha
-      close(4)
+!     do l=1,10
+!         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!       do i=1,n
+!          rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!       enddo
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-    enddo
+!    enddo
     
     D2=D
     call row_norm(D)
@@ -88,19 +88,19 @@ program photest
     write(4,*)'------------------------------------------------------------------------------'
     write(4,*)'itarive quantum row normalized'
     close(4)
-    do l=1,10
-        rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-        do i=1,n
-          rho(i+(i-1)*n)=cmplx(1./n,0.0)
-        enddo
-      alpha=0.1*real(l)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'******************************************************************************'
-      write(4,*)'alpha = ',alpha
-      close(4)
+!     do l=1,10
+!         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!         do i=1,n
+!           rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!         enddo
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-    enddo
+!    enddo
     
     
 
@@ -110,88 +110,35 @@ program photest
     write(4,*)'------------------------------------------------------------------------------'
     write(4,*)'itarive class'
     close(4)
-    do l=1,10
-      alpha=0.1*real(l)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'******************************************************************************'
-      write(4,*)'alpha = ',alpha
-      close(4)
-      call pagerank_it(Transpose(D), p, err, alpha, filename)
-    enddo
+!     do l=1,10
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
+      call pagerank_it(D, p, err, alpha, filename)
+!    enddo
        
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
     write(4,*)'------------------------------------------------------------------------------'
     write(4,*)'eigenvalue class'
     close(4)
-    do l=1,10
-      alpha=0.1*real(l)
-      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-      write(4,*)' '
-      write(4,*)'******************************************************************************'
-      write(4,*)'alpha = ',alpha
-      close(4)
-      call pagerank_ei(Transpose(D), p, alpha, filename, work)
-    enddo
+!     do l=1,10
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
+      call pagerank_ei(D, p, alpha, filename, work)
+!    enddo
   enddo
   
 
 
-  
-  ! graph 1
-!   filename='graph_1_1'
-!   D(1,1)=0.0;D(1,2)=1.;D(1,3)=1.
-!   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
-!   D(3,1)=1.0;D(3,2)=0.;D(3,3)=0.0
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   write(*,*)filename
-!  do l=1,10
-!    rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   alpha=0.1*real(l)
-!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!       write(4,*)'alpha = ',alpha
-!       close(4)
-!    call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!  enddo
-! !   
-!   ! graph 2
-!   filename='graph_2'
-!   D(1,1)=0.0;D(1,2)=0.0;D(1,3)=1.
-!   D(2,1)=1./2.;D(2,2)=0.0;D(2,3)=1./2.
-!   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   write(*,*)filename
-!   call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!   
-!   ! graph 3
-!   filename='graph_3'
-!   D(1,1)=0.0;D(1,2)=1./2.;D(1,3)=1./2.
-!   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
-!   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   write(*,*)filename
-!   call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!   
-!   ! graph 4
-!   filename='graph_4'
-!   D(1,1)=0.0;D(1,2)=1.;D(1,3)=0.0
-!   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=1.
-!   D(3,1)=1.;D(3,2)=0.0;D(3,3)=0.0
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   write(*,*)filename
-!   call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-!   
-!   ! graph 5
-!   filename='graph_5'
-!   D(1,1)=0.0;D(1,2)=1./2.;D(1,3)=1./2.
-!   D(2,1)=0.0;D(2,2)=0.0;D(2,3)=0.0
-!   D(3,1)=0.0;D(3,2)=1.;D(3,3)=0.0
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!   write(*,*)filename
-!   call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
-  
-  
+
 
 end program
   

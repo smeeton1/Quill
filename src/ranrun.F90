@@ -104,7 +104,7 @@ program photest
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
     write(4,*)'------------------------------------------------------------------------------'
-    write(4,*)'itarive quantum row normalized'
+    write(4,*)'itarive quantum normalized'
     close(4)
     do l=1,10
         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
@@ -117,25 +117,25 @@ program photest
       write(4,*)'******************************************************************************'
       write(4,*)'alpha = ',alpha
       close(4)
+      call Dir_Gra_Con(D2, rho, err, alpha, filename, r)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)' '
+      write(4,*)'--------------------------------------------------------------------------------'
+      write(4,*)'row D'
+      close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!       write(4,*)' '
-!       write(4,*)'--------------------------------------------------------------------------------'
-!       write(4,*)'-D'
-!       close(4)
-!       call Dir_Gra_Con(-D, rho, err, alpha, filename, r)
       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
       write(4,*)' '
       write(4,*)'--------------------------------------------------------------------------------'
       write(4,*)'Transpose D'
       close(4)
+      call Dir_Gra_Con(Transpose(D2), rho, err, alpha, filename, r)
+      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+      write(4,*)' '
+      write(4,*)'--------------------------------------------------------------------------------'
+      write(4,*)'Transpose row D'
+      close(4)
       call Dir_Gra_Con(Transpose(D), rho, err, alpha, filename, r)
-!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!       write(4,*)' '
-!       write(4,*)'--------------------------------------------------------------------------------'
-!       write(4,*)'Transpose -D'
-!       close(4)
-!       call Dir_Gra_Con(Transpose(-D), rho, err, alpha, filename, r)
     enddo
     
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
