@@ -16,7 +16,7 @@ program photest
   real(EP)                                     :: alpha, err
   complex(EP), dimension(:,:), allocatable     :: D,D2
   complex(EP), dimension(:), allocatable       :: rho, p
-  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase
+  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase,filename2
   logical                                      :: v, r, work
   
   
@@ -27,10 +27,9 @@ program photest
  CALL GET_COMMAND_ARGUMENT(4,nn)
  CALL GET_COMMAND_ARGUMENT(5,time)
  read(nn,*)n
- read(time,*)t
+ read(time,*)k
  
  err=0.000001
- k=2
 !   n=3
 !   t=100
    alpha=0.8
@@ -74,8 +73,9 @@ program photest
 !    enddo
     
     D2=D
+
     call row_norm(D)
-    
+
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
     do i=1,n
       rho(i+(i-1)*n)=cmplx(1./n,0.0)
@@ -117,7 +117,7 @@ program photest
 !       write(4,*)'******************************************************************************'
 !       write(4,*)'alpha = ',alpha
 !       close(4)
-      call pagerank_it(D, p, err, alpha, filename)
+      call pagerank_it(transpose(D), p, err, alpha, filename)
 !    enddo
        
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -132,7 +132,7 @@ program photest
 !       write(4,*)'******************************************************************************'
 !       write(4,*)'alpha = ',alpha
 !       close(4)
-      call pagerank_ei(D, p, alpha, filename, work)
+      call pagerank_ei(transpose(D), p, alpha, filename, work)
 !    enddo
   enddo
   

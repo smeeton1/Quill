@@ -132,9 +132,11 @@ implicit none
     do j=1,m
        tot = tot + D(i,j)
     enddo
-    do j=1,m
-       D(i,J) = D(i,j)/tot
-    enddo
+    if(tot.ne.cmplx(0.0,0.0))then
+     do j=1,m
+        D(i,J) = D(i,j)/tot
+     enddo
+    endif
   enddo
     
  end subroutine
@@ -151,9 +153,11 @@ implicit none
     do j=1,m
        tot = tot + D(j,i)
     enddo
-    do j=1,m
-       D(j,i) = D(j,i)/tot
-    enddo
+    if(tot.ne.cmplx(0.0,0.0))then
+     do j=1,m
+        D(j,i) = D(j,i)/tot
+     enddo
+    endif
   enddo
     
  end subroutine
