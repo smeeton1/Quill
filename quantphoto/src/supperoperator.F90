@@ -129,18 +129,20 @@ end subroutine
   real(kdp),intent(in)                         :: alpha
   integer                                      :: i,j,k,l,n
   complex(kdp), dimension(:,:), allocatable    :: H
+  real(kdp)                                    :: sca
 
   n=size(D,1)
   allocate(H(n,n))
 !       call write_Mat('h',D)
-   
+  
+  sca=1.0
   H(:,:)=cmplx(0,0)
 
   do i=1,n
     do j=1,n
      if(D(i,j).ne.0)then
-       H(i,j)=1
-       H(j,i)=1
+       H(i,j)=1*sca
+       H(j,i)=1*sca
      end if
     enddo
   enddo
@@ -236,11 +238,11 @@ end subroutine
   endif
 
   
-  norm= get_Norm(rho_out)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a,2F7.3)")'norm= ',norm
-  close(4)
+!   norm= get_Norm(rho_out)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a,2F7.3)")'norm= ',norm
+!   close(4)
   rho=rho_out
   
   deallocate(SO,rho_out,psi)
@@ -263,7 +265,7 @@ end subroutine
   
   n=size(D,1)
   allocate(SO(n*n,n*n),rho_out(n*n),psi(2,n))
-    
+  
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
  ! call write_Mat('SO',SO)

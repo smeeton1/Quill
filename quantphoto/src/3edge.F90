@@ -31,11 +31,11 @@ program photest
  
  err=0.000001
 !   n=3
-!   t=100
+   t=100
    alpha=0.8
   allocate(D(n,n),rho(n*n),p(n),D2(n,n))
 
-  v=.true.
+  v=.false.
   r=.true.
 ! write(*,*)size(D,1)
   call Read_MatR(infile,D)
@@ -48,16 +48,19 @@ program photest
 !     endif
     write(filename,'(3a)')trim(dirname),'/','D'
     call write_Mat(filename,D)
+!     do l=1,11
+!     alpha=real(l-1)*0.1
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
     do i=1,n
       rho(i+(i-1)*n)=cmplx(1./n,0.0)
     enddo
-    write(filename,'(3a)')trim(dirname),'/',trim(filenamebase)
-    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-    write(4,*)' '
-    write(4,*)'------------------------------------------------------------------------------'
-    write(4,*)'itarive quantum non row normalized'
-    close(4)
+!    rho(1)=cmplx(1.0,0)
+    write(filename,'(3a,F4.2)')trim(dirname),'/',trim(filenamebase),alpha
+!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!     write(4,*)' '
+!     write(4,*)'------------------------------------------------------------------------------'
+!     write(4,*)'itarive quantum non row normalized'
+!     close(4)
 !     do l=1,10
 !         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
 !       do i=1,n
@@ -70,12 +73,14 @@ program photest
 !       write(4,*)'alpha = ',alpha
 !       close(4)
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
+!      enddo
 !    enddo
     
     D2=D
 
     call row_norm(D)
 
+    
     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
     do i=1,n
       rho(i+(i-1)*n)=cmplx(1./n,0.0)
@@ -99,6 +104,8 @@ program photest
 !       write(4,*)'******************************************************************************'
 !       write(4,*)'alpha = ',alpha
 !       close(4)
+
+
       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
 !    enddo
     
@@ -133,8 +140,8 @@ program photest
 !       write(4,*)'alpha = ',alpha
 !       close(4)
       call pagerank_ei(transpose(D), p, alpha, filename, work)
-!    enddo
-  enddo
+   enddo
+!  enddo
   
 
 
