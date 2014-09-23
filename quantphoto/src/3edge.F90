@@ -43,9 +43,9 @@ program photest
   do j=1,k
     write(dirname,'(a,I5.5)')trim(dirnamebase),j 
     call make_dir(dirname)
-!     if(j.ne.1)then
-!      call Rand_Weight(D)
-!     endif
+    if(j.ne.1)then
+     call Rand_Weight(D)
+    endif
     write(filename,'(3a)')trim(dirname),'/','D'
     call write_Mat(filename,D)
 !     do l=1,11
