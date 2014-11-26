@@ -84,6 +84,54 @@ subroutine A_D_to_SO(D,SO)
 end subroutine
 
 
+! depasing for enery conserving 
+subroutine De_en_cojn(D,SO)
+ complex(kdp), dimension(:,:), intent(in)     :: D
+ complex(kdp), dimension(:,:), intent(inout)  :: SO
+ integer                                      :: i,j,k,l,n
+
+ 
+ n=size(D,1)
+!SO can be seen as being made up of n smaller matrixes of n by n size
+!i and j move along the blocks and k,l move with in the blocks
+ do i=0,n-1
+   do j=0,n-1
+    do k=1,n
+     do l=1,n
+      if((i.eq.j).and.(k.eq.l).and.((i+1).ne.k))then
+        do  q=1,n
+	    SO(i*n+k,j*n+l)=SO(i*n+k,j*n+l)-0.5*D(i+1,q)-0.5*D(k,q)
+        enddo
+      endif
+     enddo
+    enddo
+   enddo
+ enddo
+ 
+
+end subroutine
+
+! depasing for sink 
+subroutine De_sink(sink,conect,strength,SO)
+ real(kdp), intent(in)                        :: strength
+ integer, intent(in)                          :: sink
+ integer, dimension(:),intent(in)             :: conect
+ complex(kdp), dimension(:,:), intent(inout)  :: SO
+ integer                                      :: i,j,k,l,n,m,s
+ 
+ m=size(SO,1)
+ n=size(conect)
+ s=sqrt(real(m))
+ 
+ do i=1,n
+  SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))=SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))-strength
+  SO(1+(conect(i)-1)*(s+1),1+(conect(i)-1)*(s+1))=SO(1+(conect(i)-1)*(s+1),1+(conect(i)-1)*(s+1))-strength
+ enddo
+
+
+end subroutine
+
+
 ! adds the dephasing for when it has the form: Ot rho O -1/2{Ot O , rho}
 subroutine Stand_to_SO(D,SO)
  complex(kdp), dimension(:,:), intent(in)     :: D
@@ -181,7 +229,7 @@ end subroutine
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(SO(n*n,n*n),rho_out(n*n),psi(t,n))
+  allocate(SO(n*n,n*n),rho_out(n*n),psi(t+1,n))
   
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   if(v)then
@@ -209,10 +257,11 @@ end subroutine
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
  ! call write_Mat('SO',SO)
-
+  call extract_pointerS(rho, psi(1,1:n))
+ 
   do i=1,t
     call expm(SO,real(i,kdp),rho,rho_out)
-    call extract_pointerS(rho_out, psi(i,1:n))
+    call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
   
   if(r)then
@@ -280,7 +329,7 @@ end subroutine
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
   enddo
-  
+  write(*,*)i
   if(r)then
     call write_Mat_real(filename,psi)
   else
