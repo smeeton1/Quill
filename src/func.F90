@@ -162,7 +162,25 @@ implicit none
     
  end subroutine
  
- subroutine k_product()
+ 
+ !dosethe kronicer product of A and B both must be square matriecs for the same size. C must be n*n 
+ subroutine k_product(A,B,C)
+  complex(kdp),dimension(:,:),intent(inout)  :: C
+  complex(kdp),dimension(:,:),intent(in)     :: A,B
+  integer				     :: i,j,k,l,n,m
+  
+  n=size(A,1)
+  m=size(C,1)
+  
+  do i=1,n
+   do j=1,n
+    do k=0,n-1
+     do l=0,n-1
+      C(i+k,j+l)=A(i,j)*B(k+1,l+1)
+     enddo
+    enddo
+   enddo
+  enddo
  
  end subroutine
  
