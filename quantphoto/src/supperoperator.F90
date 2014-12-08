@@ -88,7 +88,7 @@ end subroutine
 subroutine De_en_cojn(D,SO)
  complex(kdp), dimension(:,:), intent(in)     :: D
  complex(kdp), dimension(:,:), intent(inout)  :: SO
- integer                                      :: i,j,k,l,n
+ integer                                      :: i,j,k,l,n,q
 
  
  n=size(D,1)
