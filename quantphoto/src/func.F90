@@ -198,7 +198,7 @@ implicit none
   C1(:,:)=cmplx(0,0)
   C2(:,:)=cmplx(0,0)
   
-  for i=1,n
+  do i=1,n
     I(i,i)=cmplx(1,0)
   enddo
   
@@ -218,6 +218,16 @@ implicit none
   
   n=size(B,1)
   m=size(A,1)
+  B(:,:)=cmplx(0,0)
+  
+  do i=0,n-1
+   do j=0,n-1
+    do k=1,n
+      B(i,j)=B(i,j)+A(i*n+k,j*n+k)
+    enddo
+   enddo
+  enddo
+  
  
  end subroutine
  
@@ -228,6 +238,32 @@ implicit none
   
   n=size(B,1)
   m=size(A,1)
+  B(:,:)=cmplx(0,0)
+  
+  do i=0,n-1
+   do j=0,n-1
+    do k=1,n
+      B(i,j)=B(i,j)+ A(i*n+k,j*n+(n-k+1))
+    enddo
+   enddo
+  enddo
+ 
+ end subroutine
+ 
+ complex(kdp) function VonNueE(A) result(ent)
+  complex(kdp),dimension(:,:),intent(in)     :: A
+  complex(8), dimension(:)                   :: v
+  integer				     :: i,n
+  
+  n=size(A,1)
+  allocate(v(n))
+  call eigen(A,v)
+  ent=0
+  do i=1,n
+    ent=v(i)*log(v(i))
+  enddo
+ 
+  deallocate(v)
  
  end subroutine
  
