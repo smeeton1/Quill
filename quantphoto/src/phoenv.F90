@@ -7,6 +7,7 @@ program photest
   use until
   use Densutil
   use class
+  use therm
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n
