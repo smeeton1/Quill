@@ -184,7 +184,50 @@ implicit none
  
  end subroutine
  
- subroutine par_trace()
+ subroutine k_sum(A,B,C)
+  complex(kdp),dimension(:,:),intent(inout)  :: C
+  complex(kdp),dimension(:,:),intent(in)     :: A,B
+  complex(kdp),dimension(:,:)                :: I,C1,C2
+  integer				     :: i,j,k,l,n,m
+  
+  n=size(A,1)
+  m=size(C,1)
+  allocate(I(n,n),C1(m,m),C2(m.m))
+  
+  I(:,:)=cmplx(0,0)
+  C1(:,:)=cmplx(0,0)
+  C2(:,:)=cmplx(0,0)
+  
+  for i=1,n
+    I(i,i)=cmplx(1,0)
+  enddo
+  
+  call k_product(A,I,C1)
+  call k_product(I,B,C2)
+  
+  C=C1+C2
+ 
+  deallocate(I,C1,C2) 
+ 
+ end subroutine
+ 
+ subroutine par_traceA(A,B)
+  complex(kdp),dimension(:,:),intent(inout)  :: B
+  complex(kdp),dimension(:,:),intent(in)     :: A
+  integer				     :: i,j,k,l,n,m
+  
+  n=size(B,1)
+  m=size(A,1)
+ 
+ end subroutine
+ 
+ subroutine par_traceB(A,B)
+  complex(kdp),dimension(:,:),intent(inout)  :: B
+  complex(kdp),dimension(:,:),intent(in)     :: A
+  integer				     :: i,j,k,l,n,m
+  
+  n=size(B,1)
+  m=size(A,1)
  
  end subroutine
  
