@@ -302,4 +302,61 @@ implicit none
 
  end subroutine
  
+ subroutine Dir_2walker(D, rho1,rho2, err, alpha, filename, r)
+  complex(kdp), dimension(:,:), intent(in)     :: D
+  complex(kdp), dimension(:), intent(inout)    :: rho1,rho2
+  real(kdp), intent(in)                        :: alpha,err
+  logical, intent(in)                          :: r
+  character(len=80),intent(in)                 :: filename
+  real(kdp)                                    :: error
+  integer                                      :: i,n
+  complex(kdp), dimension(:,:), allocatable    :: SO, psi, D2w
+  complex(kdp)                                 :: norm
+  complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com 
+  character(len=90)                            :: filename2
+  
+  n=size(D,1)
+  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(2,n*n),rho_com(n*n*n*n),D2w(n*n,n*n))
+  
+  SO(:,:)=cmplx(0,0)
+  
+  call k_sum(D,D,D2w)
+  
+  call L_make_DG(SO,D,alpha)
+ ! call write_Mat('SO',SO)
+ 
+  call k_product(rho1,rho2,rho_com) 
+  call extract_pointerS(rho_com, psi(1,:))
+  i=1
+  error=1
+  rho_out(:)=cmplx(0,0)
+  do while ((error.gt.err).or.(i.gt.10000))
+    i=i+1
+    call expm(SO,real(i,kdp),rho,rho_out)
+    call extract_pointerS(rho_out, psi(2,1:n))
+    error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
+    psi(1,:)=psi(2,:)
+  enddo
+  write(*,*)i
+  if(r)then
+    call write_Mat_real(filename,psi)
+  else
+    call write_Mat(filename,psi)
+  endif
+  
+  !call write_moments(filename,psi)
+  
+
+  call write_Vec(filename,psi(2,1:n))
+  norm= get_Norm(rho_out)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")' norm= ',norm
+  close(4)
+  rho=rho_out
+  
+  deallocate(SO,rho_out,psi)
+
+ end subroutine
+ 
  end module
