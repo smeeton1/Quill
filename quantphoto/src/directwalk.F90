@@ -48,6 +48,48 @@ implicit none
 
  end subroutine
  
+  subroutine L_make_DG_2w(SO,D,alpha,interact)
+  complex(kdp), dimension(:,:), intent(in)     :: D
+  complex(kdp), dimension(:,:), intent(inout)  :: SO
+  real(kdp),intent(in)                         :: alpha
+  logical, intent(in)                          :: interact
+  integer                                      :: i,j,k,l,n
+  complex(kdp), dimension(:,:), allocatable    :: H, H2w, D2w
+  real(kdp)                                    :: sca
+
+  n=size(D,1)
+  allocate(H(n,n),D2w(n*n,n*n),H2w(n*n,n*n))
+  
+    
+  call k_sum(D,D,D2w)
+  
+  sca=1.0
+  H(:,:)=cmplx(0,0)
+
+  do i=1,n
+    do j=1,n
+     if(D(i,j).ne.0)then
+       H(i,j)=1*sca
+       H(j,i)=1*sca
+     end if
+    enddo
+  enddo
+
+    
+  call k_sum(H,H,H2w) 
+  
+  if(interact)then
+  
+  endif
+ 
+  call B_SO_for_H((1-alpha)*H,SO)    
+  call Stand_to_SO(alpha*D,SO)
+
+
+  deallocate(H,D2w,H2w)
+
+ end subroutine
+ 
  !makes the coin operator for a 8 node line
  subroutine L_make_DCDG(SO,alpha)
   complex(kdp), dimension(:,:), intent(in)     :: D
@@ -302,40 +344,36 @@ implicit none
 
  end subroutine
  
- subroutine Dir_2walker(D, rho1,rho2, err, alpha, filename, r)
+ subroutine Dir_2walker(D, rho1,rho2, t, alpha, filename, r, interact)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho1,rho2
-  real(kdp), intent(in)                        :: alpha,err
-  logical, intent(in)                          :: r
+  real(kdp), intent(in)                        :: alpha
+  logical, intent(in)                          :: r, interact
+  integer, intent(in)                          :: t
   character(len=80),intent(in)                 :: filename
   real(kdp)                                    :: error
   integer                                      :: i,n
-  complex(kdp), dimension(:,:), allocatable    :: SO, psi, D2w
+  complex(kdp), dimension(:,:), allocatable    :: SO, psi
   complex(kdp)                                 :: norm
   complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com 
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(2,n*n),rho_com(n*n*n*n),D2w(n*n,n*n))
+  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(t+1,n*n),rho_com(n*n*n*n))
   
   SO(:,:)=cmplx(0,0)
-  
-  call k_sum(D,D,D2w)
-  
-  call L_make_DG(SO,D,alpha)
+ 
+  call L_make_DG_2w(SO,D,alpha,interact)
  ! call write_Mat('SO',SO)
  
   call k_product(rho1,rho2,rho_com) 
   call extract_pointerS(rho_com, psi(1,:))
-  i=1
-  error=1
+
   rho_out(:)=cmplx(0,0)
-  do while ((error.gt.err).or.(i.gt.10000))
-    i=i+1
+  
+  do i=1,t
     call expm(SO,real(i,kdp),rho,rho_out)
-    call extract_pointerS(rho_out, psi(2,1:n))
-    error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
-    psi(1,:)=psi(2,:)
+    call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
   write(*,*)i
   if(r)then
