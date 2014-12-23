@@ -3,7 +3,6 @@ use eigenSolve
 use until
 use func
 use Densutil
-use entangle
 use supperoperator
 !use special
 implicit none
@@ -48,11 +47,11 @@ implicit none
 
  end subroutine
  
-  subroutine L_make_DG_2w(SO,D,alpha,interact)
+ subroutine L_make_DG_2w(SO,D,alpha,interact)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:,:), intent(inout)  :: SO
   real(kdp),intent(in)                         :: alpha
-  logical, intent(in)                          :: interact
+  complex(kdp),intent(in)                      :: interact
   integer                                      :: i,j,k,l,n
   complex(kdp), dimension(:,:), allocatable    :: H, H2w, D2w
   real(kdp)                                    :: sca
@@ -78,8 +77,10 @@ implicit none
     
   call k_sum(H,H,H2w) 
   
-  if(interact)then
-  
+  if(interact.ne.0)then
+   do i=1,n*n
+    H2w(i,i)=H2w(i,i)+interact
+   enddo  
   endif
  
   call B_SO_for_H((1-alpha)*H,SO)    
@@ -92,26 +93,35 @@ implicit none
  
  !makes the coin operator for a 8 node line
  subroutine L_make_DCDG(SO,alpha)
-  complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:,:), intent(inout)  :: SO
   real(kdp),intent(in)                         :: alpha
   integer                                      :: i,j,k,l,n
-  complex(kdp), dimension(:,:), allocatable    :: H
+  complex(kdp), dimension(:,:), allocatable    :: H,D
   real(kdp)                                    :: sca
 
-  n=size(D,1)
-  allocate(H(n,n))
+  n=16 !size(D,1)
+  allocate(H(n,n),D(n,n))
   
   sca=1.0
   H(:,:)=cmplx(0,0)
+  D(:,:)=cmplx(0,0)
 
   do i=1,n
-    do j=1,n
-     if(D(i,j).ne.0)then
-       H(i,j)=1*sca
-       H(j,i)=1*sca
-     end if
-    enddo
+    if(mod(i,2).eq.0)then
+       H(i,i)=-1*sca
+       H(i,i-1)=1*sca
+    else
+       H(i,i)=1*sca
+       H(i,i+1)=1*sca
+    endif
+  enddo
+  
+  do i=1,n
+    if(mod(i,2).eq.0)then
+       D(i,i)=-1*sca
+    else
+       D(i,i+1)=1*sca
+    endif
   enddo
 
  
@@ -126,26 +136,33 @@ implicit none
  
  !makes the transition operator for a 8 node line
  subroutine L_make_DTDG(SO,alpha)
-  complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:,:), intent(inout)  :: SO
   real(kdp),intent(in)                         :: alpha
   integer                                      :: i,j,k,l,n
-  complex(kdp), dimension(:,:), allocatable    :: H
+  complex(kdp), dimension(:,:), allocatable    :: H, D
   real(kdp)                                    :: sca
 
-  n=size(D,1)
-  allocate(H(n,n))
+  n=16!size(D,1)
+  allocate(H(n,n),D(n,n))
   
   sca=1.0
   H(:,:)=cmplx(0,0)
+  D(:,:)=cmplx(0,0)
 
+  
+  H(1,15)=1
+  do i=2,n
+    if(mod(i,2).eq.0)then
+       H(i,i+2)=1*sca
+    else
+       H(i,i-2)=1*sca
+    endif
+  enddo
+  
   do i=1,n
-    do j=1,n
-     if(D(i,j).ne.0)then
-       H(i,j)=1*sca
-       H(j,i)=1*sca
-     end if
-    enddo
+    if(mod(i,2).eq.0)then
+       D(i,i+2)=1*sca
+    endif
   enddo
 
  
@@ -302,7 +319,7 @@ implicit none
   complex(kdp), dimension(:), allocatable      :: rho_out  
   character(len=90)                            :: filename2
   
-  n=8
+  n=16
   allocate(SOC(n*n,n*n),SOT(n*n,n*n),rho_out(n*n),psi(2,n))
   
   SOC(:,:)=cmplx(0,0)
@@ -348,18 +365,19 @@ implicit none
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho1,rho2
   real(kdp), intent(in)                        :: alpha
-  logical, intent(in)                          :: r, interact
+  complex(kdp),intent(in)                      :: interact
+  logical, intent(in)                          :: r
   integer, intent(in)                          :: t
   character(len=80),intent(in)                 :: filename
   real(kdp)                                    :: error
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
   complex(kdp)                                 :: norm
-  complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com 
+  complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com, rhoint,ent
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(t+1,n*n),rho_com(n*n*n*n))
+  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(t+1,n),rho_com(n*n*n*n),rhoint(n*n),ent(t))
   
   SO(:,:)=cmplx(0,0)
  
@@ -367,12 +385,14 @@ implicit none
  ! call write_Mat('SO',SO)
  
   call k_product(rho1,rho2,rho_com) 
-  call extract_pointerS(rho_com, psi(1,:))
+  call extract_pointerS(rho1, psi(1,:))
 
   rho_out(:)=cmplx(0,0)
   
   do i=1,t
-    call expm(SO,real(i,kdp),rho,rho_out)
+    call expm(SO,real(i,kdp),rho_com,rho_out)
+    call par_traceA(rho_out,rhoint)
+    ent(i)=VonNueE(rhoint)
     call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
   write(*,*)i
@@ -383,7 +403,10 @@ implicit none
   endif
   
   !call write_moments(filename,psi)
-  
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  do i=1,t
+    write(4,"(a,2F7.3)")' entropy= ',abs(real(ent(i)))
+  enddo
 
   call write_Vec(filename,psi(2,1:n))
   norm= get_Norm(rho_out)
@@ -393,7 +416,7 @@ implicit none
   close(4)
   rho=rho_out
   
-  deallocate(SO,rho_out,psi)
+  deallocate(SO,rho_out,psi,rho_com,ent,rhoint)
 
  end subroutine
  
