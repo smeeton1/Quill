@@ -29,6 +29,7 @@ OBJECTS = $(path)eigenSolve.o            \
 	  $(path)func.o			\
 	  $(path)supperoperator.o          \
 	  $(path)class.o          \
+	  $(path)therm.o          \
 	  $(path)phoenv.o               
 
 
@@ -39,6 +40,7 @@ OBJECTS3 = $(path)supperoperator.o          \
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
 	   $(path)class.o          \
+	   $(path)Directwalk.o          \
 	   $(path)3edge.o		
 
 OBJECTS4 = $(path)supperoperator.o          \
@@ -48,6 +50,7 @@ OBJECTS4 = $(path)supperoperator.o          \
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
 	   $(path)class.o          \
+	   $(path)Directwalk.o          \
 	   $(path)ranrun.o		
 
 All: Photrun 3edge ranrun
@@ -78,14 +81,18 @@ supperoperator.o: until.o solver.o Densutil.o func.o
 
 class.o: until.o solver.o Densutil.o func.o eigenSolve.o
 
-phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o
+therm.o: until.o solver.o Densutil.o func.o eigenSolve.o
 
-3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o
+Directwalk.o: until.o solver.o Densutil.o func.o eigenSolve.o
 
-ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o
+phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o therm.o
+
+3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o Directwalk.o
+
+ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o Directwalk.o
 
 clean::
-	rm obj/*o mod/*.mod Photrun 3edge
+	rm obj/*o mod/*.mod Photrun 3edge ranrun
 
 
 .DEFAULT_GOAL := Photrun

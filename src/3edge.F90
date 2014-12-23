@@ -8,14 +8,16 @@ program photest
   use Densutil
   use func
   use class
+  use Directwalk
   implicit none
 
  
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j,k, n,t,l
-  real(EP)                                     :: alpha, err
+  real(EP)                                     :: alpha, err, beta
+  complex(EP)                                  :: interact
   complex(EP), dimension(:,:), allocatable     :: D,D2
-  complex(EP), dimension(:), allocatable       :: rho, p
+  complex(EP), dimension(:), allocatable       :: rho, p, rho2, rhod
   character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase,filename2
   logical                                      :: v, r, work
   
@@ -33,7 +35,7 @@ program photest
 !   n=3
    t=100
    alpha=0.8
-  allocate(D(n,n),rho(n*n),p(n),D2(n,n))
+  allocate(D(n,n),rho(n*n),p(n),D2(n,n),rho2(n*n),rhod(16))
 
   v=.false.
   r=.true.
@@ -82,71 +84,112 @@ program photest
     call row_norm(D)
 
 !     
-!     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-!     do i=1,n
-!       rho(i+(i-1)*n)=cmplx(1./n,0.0)
-!     enddo
-!     call extract_pointerS(rho, p)
-!     
-!     call col_norm(D2)
-!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!     write(4,*)' '
-!     write(4,*)'------------------------------------------------------------------------------'
-!     write(4,*)'itarive quantum row normalized'
-!     close(4)
-! !     do l=1,10
-! !         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-! !         do i=1,n
-! !           rho(i+(i-1)*n)=cmplx(1./n,0.0)
-! !         enddo
-! !       alpha=0.1*real(l)
-! !       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-! !       write(4,*)' '
-! !       write(4,*)'******************************************************************************'
-! !       write(4,*)'alpha = ',alpha
-! !       close(4)
-! 
-! 
-!       call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-! !    enddo
-!     
-!     
-! 
-!     
-!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!     write(4,*)' '
-!     write(4,*)'------------------------------------------------------------------------------'
-!     write(4,*)'itarive class'
-!     close(4)
-! !     do l=1,10
-! !       alpha=0.1*real(l)
-! !       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-! !       write(4,*)' '
-! !       write(4,*)'******************************************************************************'
-! !       write(4,*)'alpha = ',alpha
-! !       close(4)
-!       call pagerank_it(transpose(D), p, err, alpha, filename)
-! !    enddo
-!        
-!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!     write(4,*)' '
-!     write(4,*)'------------------------------------------------------------------------------'
-!     write(4,*)'eigenvalue class'
-!     close(4)
-! !     do l=1,10
-! !       alpha=0.1*real(l)
-! !       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-! !       write(4,*)' '
-! !       write(4,*)'******************************************************************************'
-! !       write(4,*)'alpha = ',alpha
-! !       close(4)
-!       call pagerank_ei(transpose(D), p, alpha, filename, work)
+    rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+    do i=1,n
+      rho(i+(i-1)*n)=cmplx(1./n,0.0)
+    enddo
+    call extract_pointerS(rho, p)
+    
+    call col_norm(D2)
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)' '
+    write(4,*)'------------------------------------------------------------------------------'
+    write(4,*)'itarive quantum row normalized'
+    close(4)
+!     do l=1,10
+!         rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!         do i=1,n
+!           rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!         enddo
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
+
+
+      call Dir_Gra_Con(D, rho, err, alpha, filename, r)
 !    enddo
-!  enddo
+    
+    
+
+    
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)' '
+    write(4,*)'------------------------------------------------------------------------------'
+    write(4,*)'itarive class'
+    close(4)
+!     do l=1,10
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
+      call pagerank_it(transpose(D), p, err, alpha, filename)
+!    enddo
+       
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)' '
+    write(4,*)'------------------------------------------------------------------------------'
+    write(4,*)'eigenvalue class'
+    close(4)
+!     do l=1,10
+!       alpha=0.1*real(l)
+!       open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!       write(4,*)' '
+!       write(4,*)'******************************************************************************'
+!       write(4,*)'alpha = ',alpha
+!       close(4)
+      call pagerank_ei(transpose(D), p, alpha, filename, work)
+      
+
+      
+      
+   enddo
+ enddo
+ 
+  do j=1,k
+    write(dirname,'(a,I5.5)')trim(dirnamebase),j 
+    call make_dir(dirname)
+    if(j.ne.1)then
+     call Rand_Weight(D)
+    endif
+    write(filename,'(3a)')trim(dirname),'/','D'
+    call write_Mat(filename,D)
+    do l=1,11
+     alpha=real(l-1)*0.1
+     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+     do i=1,n
+       rho(i+(i-1)*n)=cmplx(1./n,0.0)
+     enddo
+!    rho(1)=cmplx(1.0,0)
+     write(filename,'(4a,F4.2)')trim(dirname),'/',trim(filenamebase),'interact',alpha
+ 
+     rho2=rho
+     interact=cmplx(0.5,0.0)
+ 
+     call Dir_2walker(D, rho,rho2, t, alpha, filename, r, interact)
+ 
+   enddo
+ enddo
+
+ 
+ do l=1,11
+     alpha=real(l-1)*0.1
+     do k=1,11
+       beta=real(l-1)*0.1
+       rhod(:)=cmplx(0,0);
+       do i=1,n
+        rhod(i+(i-1)*8)=cmplx(1./8,0.0)
+       enddo
+       write(filename,'(4a,2F4.2)')trim(dirname),'/',trim(filenamebase),'dis',alpha,beta
   
-
-
-
+       call Dis_Dir_8line(rhod, err, alpha, beta, filename, r)
+       
+    enddo
+ enddo
 
 end program
   

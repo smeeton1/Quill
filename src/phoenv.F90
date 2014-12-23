@@ -80,13 +80,15 @@ program photest
 !   D3(7,1)=0.0;D3(7,2)=0.0;D3(7,3)=0.0;D3(7,4)=0.0;D3(7,5)=0.0;D3(7,6)=1./2.;D3(7,7)=0.0;D3(7,8)=1./2.;
 !   D3(8,1)=0.0;D3(8,2)=1.0;D3(8,3)=0.0;D3(8,4)=0.0;D3(8,5)=0.0;D3(8,6)=0.0;D3(8,7)=0.0;D3(8,8)=0.0;
 !   
-  
+
+ call ele_tran(H,rho,Tend,v,r,filename,strength,T,coli,sink,conect)
+
   !call B_SO_for_H(H,SO)
   !call A_D_to_SO(D1,SO)
   !call A_D_to_SO(D2,SO)
 
   !write(*,*)'H=',H
-  filename='rho'
+!  filename='rho'
 !   rho(:)=cmplx(0,0);rho(1)=cmplx(1./8.,0);rho(10)=cmplx(1./8.,0);rho(19)=cmplx(1./8.,0);rho(28)=cmplx(1./8.,0);
 !   rho(37)=cmplx(1./8.,0);rho(46)=cmplx(1./8.,0);rho(55)=cmplx(1./8.,0);rho(64)=cmplx(1./8.,0);
 !   open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
@@ -110,113 +112,113 @@ program photest
 !   close(4)
  
  
-  alpha = 0.9
-  err=0.000001
-  psi(1)=1./3.;psi(2)=1./3.;psi(3)=1./3.
-  
-  
-  
-! graph 1 ****************************************  
-  D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-  D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=1.0
-  D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
-  
-   
-  call col_norm(D1)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'graph 1'
-  write(4,"(a)")' '
-  write(4,"(a)")'eigen value'
-  close(4) 
-  call pagerank_ei(-D1, psi, alpha, filename, work)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,"(a)")' '
-  write(4,"(a)")'itatrive value'
-  close(4) 
-  call pagerank_it(-D1, psi, err, alpha, filename)
-  
-  ! graph 2 ****************************************  
-  D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-  D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-  D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
-  
-   
-  call col_norm(D1)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'graph 2'
-  write(4,"(a)")' '
-  write(4,"(a)")'eigen value'
-  close(4) 
-  call pagerank_ei(-D1, psi, alpha, filename, work)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,"(a)")' '
-  write(4,"(a)")'itatrive value'
-  close(4) 
-  call pagerank_it(-D1, psi, err, alpha, filename)
-  
-  ! graph 3 ****************************************  
-  D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=1.0
-  D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-  D1(3,1)=0.0;D1(3,2)=0.0;D1(3,3)=0.0
-  
-   
-  call col_norm(D1)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'graph 3'
-  write(4,"(a)")' '
-  write(4,"(a)")'eigen value'
-  close(4) 
-  call pagerank_ei(-D1, psi, alpha, filename, work)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,"(a)")' '
-  write(4,"(a)")'itatrive value'
-  close(4) 
-  call pagerank_it(-D1, psi, err, alpha, filename)
-  
-  
-  ! graph 4 ****************************************  
-  D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-  D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-  D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
-  
-   
-  call col_norm(D1)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'graph 4'
-  write(4,"(a)")' '
-  write(4,"(a)")'eigen value'
-  close(4) 
-  call pagerank_ei(-D1, psi, alpha, filename, work)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,"(a)")' '
-  write(4,"(a)")'itatrive value'
-  close(4) 
-  call pagerank_it(-D1, psi, err, alpha, filename)
-  
-  
-  ! graph 5 ****************************************  
-  D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-  D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=0.0
-  D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
-  
-   
-  call col_norm(D1)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a)")'graph 5'
-  write(4,"(a)")' '
-  write(4,"(a)")'eigen value'
-  close(4) 
-  call pagerank_ei(-D1, psi, alpha, filename, work)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,"(a)")' '
-  write(4,"(a)")'itatrive value'
-  close(4) 
-  call pagerank_it(-D1, psi, err, alpha, filename)
+!   alpha = 0.9
+!   err=0.000001
+!   psi(1)=1./3.;psi(2)=1./3.;psi(3)=1./3.
+!   
+!   
+!   
+! ! graph 1 ****************************************  
+!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
+!   D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=1.0
+!   D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
+!   
+!    
+!   call col_norm(D1)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'graph 1'
+!   write(4,"(a)")' '
+!   write(4,"(a)")'eigen value'
+!   close(4) 
+!   call pagerank_ei(-D1, psi, alpha, filename, work)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,"(a)")' '
+!   write(4,"(a)")'itatrive value'
+!   close(4) 
+!   call pagerank_it(-D1, psi, err, alpha, filename)
+!   
+!   ! graph 2 ****************************************  
+!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
+!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
+!   D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
+!   
+!    
+!   call col_norm(D1)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'graph 2'
+!   write(4,"(a)")' '
+!   write(4,"(a)")'eigen value'
+!   close(4) 
+!   call pagerank_ei(-D1, psi, alpha, filename, work)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,"(a)")' '
+!   write(4,"(a)")'itatrive value'
+!   close(4) 
+!   call pagerank_it(-D1, psi, err, alpha, filename)
+!   
+!   ! graph 3 ****************************************  
+!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=1.0
+!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
+!   D1(3,1)=0.0;D1(3,2)=0.0;D1(3,3)=0.0
+!   
+!    
+!   call col_norm(D1)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'graph 3'
+!   write(4,"(a)")' '
+!   write(4,"(a)")'eigen value'
+!   close(4) 
+!   call pagerank_ei(-D1, psi, alpha, filename, work)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,"(a)")' '
+!   write(4,"(a)")'itatrive value'
+!   close(4) 
+!   call pagerank_it(-D1, psi, err, alpha, filename)
+!   
+!   
+!   ! graph 4 ****************************************  
+!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
+!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
+!   D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
+!   
+!    
+!   call col_norm(D1)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'graph 4'
+!   write(4,"(a)")' '
+!   write(4,"(a)")'eigen value'
+!   close(4) 
+!   call pagerank_ei(-D1, psi, alpha, filename, work)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,"(a)")' '
+!   write(4,"(a)")'itatrive value'
+!   close(4) 
+!   call pagerank_it(-D1, psi, err, alpha, filename)
+!   
+!   
+!   ! graph 5 ****************************************  
+!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
+!   D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=0.0
+!   D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
+!   
+!    
+!   call col_norm(D1)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a)")'graph 5'
+!   write(4,"(a)")' '
+!   write(4,"(a)")'eigen value'
+!   close(4) 
+!   call pagerank_ei(-D1, psi, alpha, filename, work)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,"(a)")' '
+!   write(4,"(a)")'itatrive value'
+!   close(4) 
+!   call pagerank_it(-D1, psi, err, alpha, filename)
 
 
 !    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
