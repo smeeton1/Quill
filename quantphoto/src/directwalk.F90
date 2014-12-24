@@ -4,7 +4,6 @@ use until
 use func
 use Densutil
 use supperoperator
-!use special
 implicit none
 
 
