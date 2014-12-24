@@ -8,6 +8,7 @@ program photest
   use Densutil
   use func
   use class
+  use directwalk
   implicit none
 
  

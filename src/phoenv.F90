@@ -6,17 +6,16 @@ program photest
   use solver
   use until
   use Densutil
-  use class
   use therm
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
-  integer                                      :: i, j, k, n, m, sink, Tend
+  integer                                      :: i, j, l, k, n, m, sink, Tend
   integer, dimension(:), allocatable           :: conect
-  real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err,alpha
+  real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err
   complex(EP), dimension(:,:), allocatable     :: H,SO
   complex(EP), dimension(:), allocatable       :: rho
   real(8)                                      :: cpu_start, cpu_end,dt
-  complex(EP)				       :: norm, coli, strength, alpha, E, V
+  complex(EP)				       :: norm, coli, strength, alpha, E, Ve
   character(len=80)                            :: fmt,filename,filename2,dirname
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
   logical                                      :: dirtest,work,v,r
@@ -102,11 +101,11 @@ program photest
    do j=1,6
    
     E=cmplx(100*(i-1),0.0) 
-    V=cmplx(100*(j-1),0.0)
+    Ve=cmplx(100*(j-1),0.0)
     alpha= cmplx(0.2*real(j),0.0)
-    write(dirname,'(a,F4.2,a,F4.2,a,F4.2)')'lattex-',real(E),'-',real(V),'-',real(alpha)
+    write(dirname,'(a,F4.2,a,F4.2,a,F4.2)')'lattex-',real(E),'-',real(Ve),'-',real(alpha)
     call make_dir(dirname)
-    call make_lattic(H,E,V,alpha,m)
+    call make_lattic(H,E,Ve,alpha,m)
     do l=1,11
       coli=cmplx(real(l-1)*0.1,0.0)
       write(filename,'(3a,F4.2)')trim(dirname),'/','start1r-',real(coli)

@@ -184,6 +184,22 @@ implicit none
  
  end subroutine
  
+ subroutine k_product_vform(A,B,C)
+  complex(kdp),dimension(:),intent(inout)    :: C
+  complex(kdp),dimension(:),intent(in)       :: A,B
+  integer				     :: i,j,k,l,n,m
+  
+  n=size(A,1)
+  m=size(C,1)
+  
+  do i=1,n
+   do j=0,n-1
+      C(i+j)=A(i)*B(j+1)
+   enddo
+  enddo
+ 
+ end subroutine
+ 
  subroutine k_sum(A,B,C)
   complex(kdp),dimension(:,:),intent(inout)  :: C
   complex(kdp),dimension(:,:),intent(in)     :: A,B
@@ -231,6 +247,37 @@ implicit none
  
  end subroutine
  
+ subroutine par_traceA_vec(A,B)
+  complex(kdp),dimension(:),intent(inout)    :: B
+  complex(kdp),dimension(:),intent(in)       :: A
+  complex(kdp),dimension(:,:),allocatable    :: C , D
+  integer				     :: i,j,k,l,n,m,p,q
+  
+  m=size(B,1)
+  n=size(A,1)
+  p=int(sqrt(real(n)))
+  q=int(sqrt(real(m)))
+  allocate(C(p,p),D(q,q))
+ 
+  do i =0,p-1
+    do j =1,p
+      C(i+1,j)=A(j+i*p)
+    enddo
+  enddo
+  
+  call par_traceA(C,D)
+  
+  do i =0,q-1
+    do j =1,q
+      B(j+i*p)=D(i+1,j)
+    enddo
+  enddo
+  
+  deallocate(C,D)
+  
+ 
+ end subroutine
+ 
  subroutine par_traceB(A,B)
   complex(kdp),dimension(:,:),intent(inout)  :: B
   complex(kdp),dimension(:,:),intent(in)     :: A
@@ -264,6 +311,25 @@ implicit none
   enddo
  
   deallocate(v)
+ 
+ end function
+ 
+ complex(kdp) function VonNueE_vec(A) result(ent)
+  complex(kdp),dimension(:),intent(in)       :: A
+  complex(kdp),dimension(:,:),allocatable    :: B
+  integer				     :: i,j,n,m
+  
+  n=size(A,1)
+  m=int(sqrt(real(n)))
+  allocate(B(m,m))
+ 
+  do i =0,m-1
+    do j =1,m
+      B(i+1,j)=A(j+i*m)
+    enddo
+  enddo
+  ent = VonNueE(B)
+  deallocate(B)
  
  end function
  
