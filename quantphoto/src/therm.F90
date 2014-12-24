@@ -30,7 +30,7 @@ implicit none
   
   H(n,n)=eval-V
   H(n,n-1)=eval-V
-  H(n,n-m)=aeval-V
+  H(n,n-m)=eval-V
   
   do i=2,n-1
      if(i.lt.m)then
@@ -62,7 +62,7 @@ implicit none
   integer, intent(in)                          :: sink
   integer, dimension(:), intent(in)            :: conect
   complex(kdp), intent(in)                     :: strength, T, coli
-  complex(kdp),dimension(:,:)                  :: D
+  complex(kdp),dimension(:,:),allocatable      :: D
   integer                                      :: n
   
   n=size(H,1)
@@ -76,7 +76,7 @@ implicit none
   D(:,:)=coli
   call De_en_cojn(D,SO)
   
-  call De_sink(sink,conect,strength,SO)
+  call De_sink(sink,conect,real(strength),SO)
   
   deallocate(D)
  end subroutine
@@ -88,7 +88,7 @@ implicit none
   integer, intent(in)                          :: sink
   integer, dimension(:), intent(in)            :: conect
   complex(kdp), intent(in)                     :: strength, T
-  complex(kdp),dimension(:,:)                  :: D
+  complex(kdp),dimension(:,:),allocatable      :: D
   integer                                      :: n
   
   n=size(H,1)
@@ -99,7 +99,7 @@ implicit none
   D(:,:)=T
   call Stand_to_SO(D,SO)
  
-  call De_sink(sink,conect,strength,SO)
+  call De_sink(sink,conect,real(strength),SO)
   
   deallocate(D) 
  
@@ -120,7 +120,7 @@ implicit none
   character(len=90)                            :: filename2
   
   n=size(H,1)
-  allocate(rho_out(n*n),psi(t+1,n),SO(n*n,n*n))
+  allocate(rho_out(n*n),psi(Tend+1,n),SO(n*n,n*n))
   
   if(coli.eq.0.0)then
     call ele_L_T(H,strength,T,sink,conect,SO)
@@ -172,7 +172,7 @@ implicit none
     write(4,*)''
     write(4,"(a)")'Pointer States'
     close(4)
-    call write_Vec(filename,psi(t,1:n))
+    call write_Vec(filename,psi(Tend,1:n))
     norm= get_Norm(rho_out)
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)''

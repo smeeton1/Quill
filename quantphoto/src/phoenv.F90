@@ -5,17 +5,17 @@ program photest
   use supperoperator
   use solver
   use until
-  use Densutil
+  use Densutil 
   use therm
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
   integer                                      :: i, j, l, k, n, m, sink, Tend
   integer, dimension(:), allocatable           :: conect
-  real(EP)                                     :: tua,Temp,Kb,Hbar,pi,wc,Er,t,tmax,err
+  real(EP)                                     :: Temp,Kb,Hbar,pi,wc,Er,t,tmax,err
   complex(EP), dimension(:,:), allocatable     :: H,SO
   complex(EP), dimension(:), allocatable       :: rho
   real(8)                                      :: cpu_start, cpu_end,dt
-  complex(EP)				       :: norm, coli, strength, alpha, E, Ve
+  complex(EP)				       :: norm, coli, strength, alpha, E, Ve, tua
   character(len=80)                            :: fmt,filename,filename2,dirname
   CHARACTER(len=20)                            :: iter,step,node,pha,direct,typ
   logical                                      :: dirtest,work,v,r
@@ -36,7 +36,7 @@ program photest
   r = .true.
   
   Temp = 73; wc = 150; Er= 35
-  tua = (2*pi*kb*Temp*Er)/(hbar*hbar*wc)
+  tua = cmplx((2*pi*kb*Temp*Er)/(hbar*hbar*wc),0.0)
 
   allocate(H(n,n),rho(n*n),conect(3))
 
@@ -60,7 +60,7 @@ program photest
   do l=1,11
     coli=cmplx(real(l-1)*0.1,0.0)
     write(filename,'(3a,F4.2)')'photoFull','/','start5w',coli
-    call ele_tran(H,rho,Tend,v,r,filename,strength,cmplx(tua,0.0),coli,sink,conect)
+    call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
   enddo
 
 ! 
@@ -77,7 +77,7 @@ program photest
   do l=1,11
     coli=cmplx(real(l-1)*0.1,0.0)
     write(filename,'(3a,F4.2)')'photodag','/','start5w',coli
-    call ele_tran(H,rho,Tend,v,r,filename,strength,cmplx(tua,0.0),coli,sink,conect)
+    call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
   enddo
 
   deallocate(H,rho)
@@ -109,7 +109,7 @@ program photest
     do l=1,11
       coli=cmplx(real(l-1)*0.1,0.0)
       write(filename,'(3a,F4.2)')trim(dirname),'/','start1r-',real(coli)
-      call ele_tran(H,rho,Tend,v,r,filename,strength,cmplx(tua,0.0),coli,sink,conect)
+      call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
     enddo
    enddo
   enddo
