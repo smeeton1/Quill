@@ -40,7 +40,7 @@ OBJECTS3 = $(path)supperoperator.o          \
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
 	   $(path)class.o          \
-	   $(path)Directwalk.o          \
+	   $(path)directwalk.o          \
 	   $(path)3edge.o		
 
 OBJECTS4 = $(path)supperoperator.o          \
@@ -50,22 +50,22 @@ OBJECTS4 = $(path)supperoperator.o          \
 	   $(path)Densutil.o		\
 	   $(path)func.o		\
 	   $(path)class.o          \
-	   $(path)Directwalk.o          \
+	   $(path)directwalk.o          \
 	   $(path)ranrun.o		
 
 All: Photrun 3edge ranrun
 
 $(path)%.o : src/%.F90
 	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) -o $@ -J$(BINDIR)
-
-Photrun: $(OBJECTS)
-	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 	
 3edge: $(OBJECTS3)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS3) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 ranrun: $(OBJECTS4)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS4) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+	
+Photrun: $(OBJECTS)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 eigenSolve.o:
 
@@ -81,15 +81,15 @@ supperoperator.o: until.o solver.o Densutil.o func.o
 
 class.o: until.o solver.o Densutil.o func.o eigenSolve.o
 
-therm.o: until.o solver.o Densutil.o func.o eigenSolve.o
+therm.o: until.o solver.o Densutil.o func.o supperoperator.o
 
-Directwalk.o: until.o solver.o Densutil.o func.o eigenSolve.o
+Directwalk.o: until.o solver.o Densutil.o func.o supperoperator.o
 
 phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o therm.o
 
-3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o Directwalk.o
+3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
 
-ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o Directwalk.o
+ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
 
 clean::
 	rm obj/*o mod/*.mod Photrun 3edge ranrun

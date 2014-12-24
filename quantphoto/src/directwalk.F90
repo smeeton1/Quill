@@ -1,4 +1,4 @@
-module Directwalk
+module directwalk
 use eigenSolve
 use until
 use func
@@ -334,7 +334,7 @@ implicit none
   rho_out=rho
   do while ((error.gt.err).or.(i.gt.10000))
     i=i+1
-    rho_out=SOT*SOC*rho_out
+    rho_out= matmul(SOT,matmul(SOC,rho_out))
     call extract_pointerS(rho_out, psi(2,1:n))
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
@@ -384,15 +384,15 @@ implicit none
   call L_make_DG_2w(SO,D,alpha,interact)
  ! call write_Mat('SO',SO)
  
-  call k_product(rho1,rho2,rho_com) 
+  call k_product_vform(rho1,rho2,rho_com) 
   call extract_pointerS(rho1, psi(1,:))
 
   rho_out(:)=cmplx(0,0)
   
   do i=1,t
     call expm(SO,real(i,kdp),rho_com,rho_out)
-    call par_traceA(rho_out,rhoint)
-    ent(i)=VonNueE(rhoint)
+    call par_traceA_vec(rho_out,rhoint)
+    ent(i)=VonNueE_vec(rhoint)
     call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
   write(*,*)i
@@ -414,7 +414,7 @@ implicit none
   write(4,*)''
   write(4,"(a,2F7.3)")' norm= ',norm
   close(4)
-  rho=rho_out
+
   
   deallocate(SO,rho_out,psi,rho_com,ent,rhoint)
 
