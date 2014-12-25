@@ -282,7 +282,6 @@ implicit none
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
   enddo
-  write(*,*)i
   if(r)then
     call write_Mat_real(filename,psi)
   else
@@ -338,7 +337,6 @@ implicit none
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
   enddo
-  write(*,*)i
   if(r)then
     call write_Mat_real(filename,psi)
   else
@@ -394,7 +392,6 @@ implicit none
     ent(i)=VonNueE_vec(rhoint)
     call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
-  write(*,*)i
   if(r)then
     call write_Mat_real(filename,psi)
   else
