@@ -9,7 +9,7 @@ program photest
   use therm
   implicit none
   integer, parameter :: EP = selected_real_kind(15)
-  integer                                      :: i, j, l, k, n, m, sink, Tend
+  integer                                      :: i, j, l, k, n, m, sink, Tend,p
   integer, dimension(:), allocatable           :: conect
   real(EP)                                     :: Temp,Kb,Hbar,pi,wc,Er,t,tmax,err
   complex(EP), dimension(:,:), allocatable     :: H,SO
@@ -28,10 +28,10 @@ program photest
   err = 0.00001
   Kb = 1.3806488e-23
   pi = 3.14159265359
-  Hbar =  6.62606957e-34
+  Hbar = 1! 6.62606957e-34
   alpha = 0.8
   
-  Tend = 200
+  Tend = 20
   v = .false.
   r = .true.
   
@@ -56,51 +56,54 @@ program photest
   H(6,1)=12.6;H(6,2)=7.4;H(6,3)=-8.4;H(6,4)=-14.2;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
   H(7,1)=-6.2;H(7,2)=-0.3;H(7,3)=7.6;H(7,4)=-67;H(7,5)=-0.1;H(7,6)=-38.3;H(7,7)=230
  
-  call make_dir('photoFull')
+  write(dirname,'(a)')'photoFull'
+  call make_dir(dirname)
   do l=1,11
     coli=cmplx(real(l-1)*0.1,0.0)
-    write(filename,'(3a,F4.2)')'photoFull','/','start5w',coli
-    call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
+    write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start5w',real(coli)
+   call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
   enddo
 
 ! 
-  H(1,1)=200;H(1,2)=-96;H(1,3)=0;H(1,4)=0;H(1,5)=0;H(1,6)=0;H(1,7)=0
-  H(2,1)=-96;H(2,2)=320;H(2,3)=33.1;H(2,4)=0;H(2,5)=0;H(2,6)=0;H(2,7)=0
-  H(3,1)=0;H(3,2)=33.1;H(3,3)=0;H(3,4)=-51.1;H(3,5)=0;H(3,6)=0;H(3,7)=0
-  H(4,1)=0;H(4,2)=0;H(4,3)=-51.1;H(4,4)=110;H(4,5)=-76.6;H(4,6)=0;H(4,7)=0
-  H(5,1)=0;H(5,2)=0;H(5,3)=0;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=0
-  H(6,1)=0;H(6,2)=0;H(6,3)=0;H(6,4)=0;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
-  H(7,1)=0;H(7,2)=0;H(7,3)=0;H(7,4)=0;H(7,5)=0;H(7,6)=-38.3;H(7,7)=230
-
-!   
-  call make_dir('photodag')
-  do l=1,11
-    coli=cmplx(real(l-1)*0.1,0.0)
-    write(filename,'(3a,F4.2)')'photodag','/','start5w',coli
-    call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
-  enddo
+!   H(1,1)=200;H(1,2)=-96;H(1,3)=0;H(1,4)=0;H(1,5)=0;H(1,6)=0;H(1,7)=0
+!   H(2,1)=-96;H(2,2)=320;H(2,3)=33.1;H(2,4)=0;H(2,5)=0;H(2,6)=0;H(2,7)=0
+!   H(3,1)=0;H(3,2)=33.1;H(3,3)=0;H(3,4)=-51.1;H(3,5)=0;H(3,6)=0;H(3,7)=0
+!   H(4,1)=0;H(4,2)=0;H(4,3)=-51.1;H(4,4)=110;H(4,5)=-76.6;H(4,6)=0;H(4,7)=0
+!   H(5,1)=0;H(5,2)=0;H(5,3)=0;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=0
+!   H(6,1)=0;H(6,2)=0;H(6,3)=0;H(6,4)=0;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
+!   H(7,1)=0;H(7,2)=0;H(7,3)=0;H(7,4)=0;H(7,5)=0;H(7,6)=-38.3;H(7,7)=230
+! ! 
+!   write(dirname,'(a)')'photodag'  
+!   call make_dir(dirname)
+!   do l=1,11
+!     coli=cmplx(real(l-1)*0.1,0.0)
+!     write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start5w',real(coli)
+!     call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
+!   enddo
 
   deallocate(H,rho)
   
-  m=5
-  n=m*10
-  sink=3+m*9
-  conect(1)=3+m*9-1
-  conect(2)=3+m*9+1
-  conect(3)=3+m*8
+  m=3
+  p=3
+  n=m*p
+  sink=2+m*(p-1)
+  conect(1)=2+m*(p-1)-1
+  conect(2)=2+m*(p-1)+1
+  conect(3)=2+m*(p-2)
   
   allocate(H(n,n),rho(n*n))
+  rho(:)=cmplx(0.0,0.0)
     do i=1,m
       rho(i+(i-1)*n)=cmplx(1./m,0.0)
   enddo
-  
-  
-
-  
+!   
+!   
+! 
+!   
   do i=1,6
    do j=1,6
    
-    E=cmplx(100*(i-1),0.0) 
+    E=cmplx(100*(i-1)/Temp,0.0) 
     Ve=cmplx(100*(j-1),0.0)
     alpha= cmplx(0.2*real(j),0.0)
     write(dirname,'(a,F4.2,a,F4.2,a,F4.2)')'lattex-',real(E),'-',real(Ve),'-',real(alpha)
@@ -108,216 +111,13 @@ program photest
     call make_lattic(H,E,Ve,alpha,m)
     do l=1,11
       coli=cmplx(real(l-1)*0.1,0.0)
-      write(filename,'(3a,F4.2)')trim(dirname),'/','start1r-',real(coli)
+      write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(coli)
       call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
     enddo
    enddo
   enddo
   
-  !write(*,*)'H=',H
-!  filename='rho'
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1./8.,0);rho(10)=cmplx(1./8.,0);rho(19)=cmplx(1./8.,0);rho(28)=cmplx(1./8.,0);
-!   rho(37)=cmplx(1./8.,0);rho(46)=cmplx(1./8.,0);rho(55)=cmplx(1./8.,0);rho(64)=cmplx(1./8.,0);
-!   open(4,file=filename,STATUS='replace',ACCESS='append',ACTION='write')
-!   write(4,"(a)")'In the before'
-!   close(4)
-!   call write_rho(rho,filename)
-!  call extract_pointerS(rho, psi)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'Pointer States'
-!   close(4)
-!   call write_Vec(filename,psi)
-!   norm= get_Norm(rho)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a,2F7.3)")'norm= ',norm
-!   close(4)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'In the after'
-!   close(4)
- 
- 
-!   alpha = 0.9
-!   err=0.000001
-!   psi(1)=1./3.;psi(2)=1./3.;psi(3)=1./3.
-!   
-!   
-!   
-! ! graph 1 ****************************************  
-!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-!   D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=1.0
-!   D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
-!   
-!    
-!   call col_norm(D1)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'graph 1'
-!   write(4,"(a)")' '
-!   write(4,"(a)")'eigen value'
-!   close(4) 
-!   call pagerank_ei(-D1, psi, alpha, filename, work)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,"(a)")' '
-!   write(4,"(a)")'itatrive value'
-!   close(4) 
-!   call pagerank_it(-D1, psi, err, alpha, filename)
-!   
-!   ! graph 2 ****************************************  
-!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-!   D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
-!   
-!    
-!   call col_norm(D1)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'graph 2'
-!   write(4,"(a)")' '
-!   write(4,"(a)")'eigen value'
-!   close(4) 
-!   call pagerank_ei(-D1, psi, alpha, filename, work)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,"(a)")' '
-!   write(4,"(a)")'itatrive value'
-!   close(4) 
-!   call pagerank_it(-D1, psi, err, alpha, filename)
-!   
-!   ! graph 3 ****************************************  
-!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=1.0
-!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-!   D1(3,1)=0.0;D1(3,2)=0.0;D1(3,3)=0.0
-!   
-!    
-!   call col_norm(D1)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'graph 3'
-!   write(4,"(a)")' '
-!   write(4,"(a)")'eigen value'
-!   close(4) 
-!   call pagerank_ei(-D1, psi, alpha, filename, work)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,"(a)")' '
-!   write(4,"(a)")'itatrive value'
-!   close(4) 
-!   call pagerank_it(-D1, psi, err, alpha, filename)
-!   
-!   
-!   ! graph 4 ****************************************  
-!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-!   D1(2,1)=1.0;D1(2,2)=0.0;D1(2,3)=1.0
-!   D1(3,1)=1.0;D1(3,2)=0.0;D1(3,3)=0.0
-!   
-!    
-!   call col_norm(D1)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'graph 4'
-!   write(4,"(a)")' '
-!   write(4,"(a)")'eigen value'
-!   close(4) 
-!   call pagerank_ei(-D1, psi, alpha, filename, work)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,"(a)")' '
-!   write(4,"(a)")'itatrive value'
-!   close(4) 
-!   call pagerank_it(-D1, psi, err, alpha, filename)
-!   
-!   
-!   ! graph 5 ****************************************  
-!   D1(1,1)=0.0;D1(1,2)=1.0;D1(1,3)=0.0
-!   D1(2,1)=0.0;D1(2,2)=0.0;D1(2,3)=0.0
-!   D1(3,1)=1.0;D1(3,2)=1.0;D1(3,3)=0.0
-!   
-!    
-!   call col_norm(D1)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'graph 5'
-!   write(4,"(a)")' '
-!   write(4,"(a)")'eigen value'
-!   close(4) 
-!   call pagerank_ei(-D1, psi, alpha, filename, work)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,"(a)")' '
-!   write(4,"(a)")'itatrive value'
-!   close(4) 
-!   call pagerank_it(-D1, psi, err, alpha, filename)
 
-
-!    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!    write(4,*)''
-!    write(4,"(a)")'D'
-!    close(4)
-!    call write_Mat(filename,D3) 
-!  
-!  
-!    call Stand_to_SO(D3,SO)
-!    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!    write(4,*)''
-!    write(4,"(a)")'SO no H'
-!    write(4,*)size(SO,1)
-!    write(4,*)size(SO,2)
-!    close(4)
-!    call write_Mat(filename,SO)
-
-
-!   t=100
-!   tmax=0.0
-!   dt=0.1
-!   alpha = 0.8
-!   SO(:,:)=cmplx(0,0)
-!   call L_make_DG(SO,D3,alpha)
-! 
-! !    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-! !    write(4,*)''
-! !    write(4,"(a)")'SO'
-! !    write(4,*)size(SO,1)
-! !    write(4,*)size(SO,2)
-! !    close(4)
-! !    call write_Mat(filename,SO)
-! 
-! 
-!   call expm(SO,t,rho,rho_out)
-! 
-! 
-!   call write_rho(rho_out,filename)
-!   call extract_pointerS(rho_out, psi)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a)")'Pointer States'
-!   close(4)
-!   call write_Vec(filename,psi)
-!   norm= get_Norm(rho_out)
-!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-!   write(4,*)''
-!   write(4,"(a,2F7.3)")'norm= ',norm
-!   close(4)
-
-!   open(3,file='results',STATUS='replace',ACTION='write')
-!   call CBM(H,rho,t)
-!   write(3,*)'t=',t,'Psi',rho*CONJG(rho)
-!   rho(:)=cmplx(0,0);rho(1)=cmplx(1,0)
-!   call rk45(H,rho,tmax,t,dt,err)
-!   write(3,*)'t=',t,'Psi',rho*CONJG(rho)
-
-  !
-  !call Stand_to_SO(D3,SO)
-
-  !write(*,*)'rho=',rho
-!   open(4,file='SO',STATUS='replace',ACTION='write')
-!   write(4,"(16F5.0)")real(SO)
-!   close(4)
-
-
-
- 
-!enddo
-
- !close(3)
 
 !  deallocate(array, eighold, work1, work2, leftvectors, rightvectors)
 !  deallocate(rho, H, theta0, theta1, theta2, tot)

@@ -34,11 +34,11 @@ implicit none
   
   do i=2,n-1
      if(i.lt.m)then
-       H(i,i)=-eval-V/(cmplx(p,0.0))
+       H(i,i)=eval-V/(cmplx(p,0.0))
        H(i,i+1)=eval-V/(cmplx(p,0.0))
        H(i,i-1)=eval-V/(cmplx(p,0.0))
        H(i,m+i)= eval-V/(cmplx(p,0.0))    
-     elseif((i.gt.m).and.(i.lt.(n-m)))then
+     elseif((i.ge.m).and.(i.le.(n-m)))then
        H(i,i)=eval-V/(cmplx(p,0.0)-cmplx(int(i/m),0.0))
        H(i,i+1)=eval-V/(cmplx(p,0.0)-cmplx(int(i/m),0.0))
        H(i,i-1)=eval-V/(cmplx(p,0.0)-cmplx(int(i/m),0.0))
@@ -51,6 +51,7 @@ implicit none
        H(i,i-m)=eval-V
      endif
   enddo
+  call write_Mat_real('H',H)
  
  end subroutine
  
@@ -127,7 +128,7 @@ implicit none
   else
     call ele_L_Tcol(H,strength,T,coli,sink,conect,SO)
   endif
-  
+  !call write_Mat_real('SO',SO)
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   if(v)then
     write(4,"(a)")'In the before'
@@ -149,7 +150,6 @@ implicit none
     write(4,"(a)")'In the after'
   endif
   close(4) 
-  
  ! call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,1:n))
  
@@ -157,7 +157,6 @@ implicit none
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
-  
   if(r)then
     call write_Mat_real(filename,psi)
   else
@@ -179,6 +178,11 @@ implicit none
     write(4,"(a,2F7.3)")'norm= ',norm
     close(4)
   endif
+    norm= get_Norm(rho_out)
+    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+    write(4,*)''
+    write(4,"(a,2F7.3)")'norm= ',norm
+    close(4)
  
   deallocate(rho_out,psi,SO)
  

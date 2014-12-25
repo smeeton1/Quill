@@ -121,10 +121,10 @@ subroutine De_sink(sink,conect,strength,SO)
  
  m=size(SO,1)
  n=size(conect)
- s=sqrt(real(m))
+ s=int(sqrt(real(m)))
  
  do i=1,n
-  SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))=SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))-strength
+  SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))=SO(1+(sink-1)*(s+1),1+(conect(i)-1)*(s+1))+strength
   SO(1+(conect(i)-1)*(s+1),1+(conect(i)-1)*(s+1))=SO(1+(conect(i)-1)*(s+1),1+(conect(i)-1)*(s+1))-strength
  enddo
 
