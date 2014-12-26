@@ -144,6 +144,23 @@ module until
   close(4)
  
  end subroutine
+ 
+  !write a complex vector to the given file name. add to the file dose not over write the old content. 
+ subroutine write_Vec_real(filename,vec)
+  complex(kdp),dimension(:),intent(in)  :: vec
+  character(len=80),intent(in)          :: filename 
+  integer                               :: n, i
+
+  n=size(vec)
+
+  open(4,file=filename,ACCESS='append',ACTION='write')
+  write(4,*)''
+  do i=1,n
+    write(4,"(F15.10,a)",ADVANCE='no')real(vec(i)),' '
+  enddo
+  close(4)
+ 
+ end subroutine
 
  !make a new dirctory. 
  subroutine make_dir(dirname)

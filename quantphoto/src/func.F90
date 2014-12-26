@@ -162,6 +162,35 @@ implicit none
     
  end subroutine
  
+ subroutine vec_to_mat(A,B)
+  complex(kdp),dimension(:,:),intent(inout)  :: B
+  complex(kdp),dimension(:),intent(in)       :: A
+  integer				     :: i,j,n
+ 
+  n=size(B,1)
+ 
+   do i =0,n-1
+    do j =1,n
+      B(i+1,j)=A(j+i*n)
+    enddo
+  enddo
+ 
+ end subroutine
+ 
+ subroutine mat_to_vec(A,B)
+  complex(kdp),dimension(:),intent(inout)    :: B
+  complex(kdp),dimension(:,:),intent(in)     :: A
+  integer				     :: i,j,n,m
+ 
+  n=size(A,1) 
+  
+  do i =0,n-1
+    do j =1,n
+      B(j+i*n)=A(i+1,j)
+    enddo
+  enddo
+ 
+ end subroutine
  
  !dosethe kronicer product of A and B both must be square matriecs for the same size. C must be n*n 
  subroutine k_product(A,B,C)
@@ -174,29 +203,34 @@ implicit none
   
   do i=1,n
    do j=1,n
-    do k=0,n-1
-     do l=0,n-1
-      C(i+k,j+l)=A(i,j)*B(k+1,l+1)
+    do k=1,n
+     do l=1,n
+      C(n*(i-1)+k,n*(j-1)+l)=A(i,j)*B(k,l)
      enddo
     enddo
    enddo
   enddo
+  
  
  end subroutine
  
  subroutine k_product_vform(A,B,C)
   complex(kdp),dimension(:),intent(inout)    :: C
   complex(kdp),dimension(:),intent(in)       :: A,B
-  integer				     :: i,j,k,l,n,m
+  complex(kdp),dimension(:,:),allocatable    :: D,E,F
+  integer				     :: i,j,k,l,n,m,p,q
   
   n=size(A,1)
   m=size(C,1)
+  p=int(sqrt(real(n)))
+  q=int(sqrt(real(m)))
   
-  do i=1,n
-   do j=0,n-1
-      C(i+j)=A(i)*B(j+1)
-   enddo
-  enddo
+  allocate(D(p,p),E(p,p),F(q,q))
+  
+  call vec_to_mat(A,D)
+  call vec_to_mat(B,E)
+  call k_product(D,E,F)
+  call mat_to_vec(F,C)
  
  end subroutine
  
@@ -239,7 +273,7 @@ implicit none
   do i=0,n-1
    do j=0,n-1
     do k=1,n
-      B(i,j)=B(i,j)+A(i*n+k,j*n+k)
+      B(i+1,j+1)=B(i+1,j+1)+A(i*n+k,j*n+k)
     enddo
    enddo
   enddo
@@ -258,7 +292,7 @@ implicit none
   p=int(sqrt(real(n)))
   q=int(sqrt(real(m)))
   allocate(C(p,p),D(q,q))
- 
+
   do i =0,p-1
     do j =1,p
       C(i+1,j)=A(j+i*p)
@@ -266,16 +300,15 @@ implicit none
   enddo
   
   call par_traceA(C,D)
-  
+
   do i =0,q-1
     do j =1,q
       B(j+i*p)=D(i+1,j)
     enddo
   enddo
-  
+
   deallocate(C,D)
   
- 
  end subroutine
  
  subroutine par_traceB(A,B)
@@ -309,7 +342,6 @@ implicit none
   do i=1,n
     ent=v(i)*log(v(i))
   enddo
- 
   deallocate(v)
  
  end function
@@ -322,7 +354,6 @@ implicit none
   n=size(A,1)
   m=int(sqrt(real(n)))
   allocate(B(m,m))
- 
   do i =0,m-1
     do j =1,m
       B(i+1,j)=A(j+i*m)
@@ -331,6 +362,18 @@ implicit none
   ent = VonNueE(B)
   deallocate(B)
  
+ end function
+ 
+ real(kdp) function vec_norm(A) result(norm)
+  complex(kdp),dimension(:),intent(inout)    :: A
+  integer				     :: j,n
+  n=size(A)
+
+  norm=0.0
+  do j=1,n
+    norm = norm + real(conjg(A(j))*A(j))
+  enddo
+  
  end function
  
 end module

@@ -82,8 +82,56 @@ implicit none
    enddo  
   endif
  
+  
   call B_SO_for_H((1-alpha)*H,SO)    
   call Stand_to_SO(alpha*D,SO)
+
+
+  deallocate(H,D2w,H2w)
+
+ end subroutine
+ 
+ subroutine L_make_DG_2w_v2(SO,D,alpha,interact)
+  complex(kdp), dimension(:,:), intent(in)     :: D
+  complex(kdp), dimension(:,:), intent(inout)  :: SO
+  real(kdp),intent(in)                         :: alpha
+  complex(kdp),intent(in)                      :: interact
+  integer                                      :: i,j,k,l,n
+  complex(kdp), dimension(:,:), allocatable    :: H, H2w, D2w
+  real(kdp)                                    :: sca
+
+  n=size(D,1)
+  allocate(H(n,n),D2w(n*n,n*n),H2w(n*n,n*n))
+  
+    
+  !call k_sum(D,D,D2w)
+  
+  sca=1.0
+  H(:,:)=cmplx(0,0)
+
+  do i=1,n
+    do j=1,n
+     if(D(i,j).ne.0)then
+       H(i,j)=1*sca
+       H(j,i)=1*sca
+     end if
+    enddo
+  enddo
+
+    
+!   call k_sum(H,H,H2w) 
+!   
+!   if(interact.ne.0)then
+!    do i=1,n*n
+!     H2w(i,i)=H2w(i,i)+interact
+!    enddo  
+!   endif
+ 
+  
+  call B_SO_for_H((1-alpha)*H,D2w)    
+  call Stand_to_SO(alpha*D,D2w)
+  
+  call k_sum(D2w,D2w,SO)
 
 
   deallocate(H,D2w,H2w)
@@ -327,12 +375,14 @@ implicit none
   
  ! call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,:))
+ ! write(*,*)size(rho),size(SOC,1),size(SOT,1)
   i=1
   error=1
   rho_out=rho
   do while ((error.gt.err).or.(i.gt.10000))
     i=i+1
-    rho_out= matmul(SOT,matmul(SOC,rho_out))
+    rho_out= matmul(SOC,rho_out)
+    rho_out= matmul(SOT,rho_out)
     call extract_pointerS(rho_out, psi(2,1:n))
     error = maxval(abs(psi(1,1:n)-psi(2,1:n)))
     psi(1,:)=psi(2,:)
@@ -383,14 +433,15 @@ implicit none
  
   call k_product_vform(rho1,rho2,rho_com) 
   call extract_pointerS(rho1, psi(1,:))
+  
+  call write_Vec(filename,rho_com)
 
   rho_out(:)=cmplx(0,0)
-  
   do i=1,t
     call expm(SO,real(i,kdp),rho_com,rho_out)
     call par_traceA_vec(rho_out,rhoint)
-    ent(i)=VonNueE_vec(rhoint)
-    call extract_pointerS(rho_out, psi(i+1,1:n))
+    !ent(i)=VonNueE_vec(rhoint)
+    call extract_pointerS(rhoint, psi(i+1,1:n))
   enddo
   if(r)then
     call write_Mat_real(filename,psi)
@@ -403,7 +454,6 @@ implicit none
   do i=1,t
     write(4,"(a,2F7.3)")' entropy= ',abs(real(ent(i)))
   enddo
-
   call write_Vec(filename,psi(2,1:n))
   norm= get_Norm(rho_out)
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -411,8 +461,56 @@ implicit none
   write(4,"(a,2F7.3)")' norm= ',norm
   close(4)
 
-  
+
   deallocate(SO,rho_out,psi,rho_com,ent,rhoint)
+
+ end subroutine
+ 
+  subroutine Dir_justgamma(D, rho, t, filename, r)
+  complex(kdp), dimension(:,:), intent(in)     :: D
+  complex(kdp), dimension(:), intent(inout)    :: rho
+  logical, intent(in)                          :: r
+  integer, intent(in)                          :: t
+  character(len=80),intent(in)                 :: filename
+  integer                                      :: i,n
+  complex(kdp), dimension(:,:), allocatable    :: psi,Dcom
+  real(kdp)                                    :: norm
+  complex(kdp), dimension(:), allocatable      :: rho_out
+  character(len=90)                            :: filename2
+  
+  n=size(D,1)
+  allocate(rho_out(n),psi(t+1,n),Dcom(n,n))
+
+ ! call write_Mat('SO',SO)
+ 
+  psi(1,:)=rho
+
+  rho_out(:)=cmplx(0,0)
+  
+  Dcom=D*cmplx(0.0,1.0)
+  
+  do i=1,t
+    call expm(D,real(i,kdp),rho,rho_out)
+  enddo
+  if(r)then
+    call write_Mat_real(filename,psi)
+  else
+    call write_Mat(filename,psi)
+  endif
+  
+  !call write_moments(filename,psi)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+
+
+  call write_Vec(filename,psi(2,1:n))
+  norm= vec_norm(rho_out)
+  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+  write(4,*)''
+  write(4,"(a,2F7.3)")' norm= ',norm
+  close(4)
+
+  
+  deallocate(rho_out,psi)
 
  end subroutine
  
