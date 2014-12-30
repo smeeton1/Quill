@@ -51,7 +51,17 @@ OBJECTS4 = $(path)supperoperator.o          \
 	   $(path)func.o		\
 	   $(path)class.o          \
 	   $(path)directwalk.o          \
-	   $(path)ranrun.o		
+	   $(path)ranrun.o	
+	   
+OBJECTS5 = $(path)supperoperator.o          \
+	   $(path)eigenSolve.o            \
+	   $(path)solver.o              \
+	   $(path)until.o		\
+	   $(path)Densutil.o		\
+	   $(path)func.o		\
+	   $(path)class.o          \
+	   $(path)directwalk.o          \
+	   $(path)interact.o	
 
 All: Photrun 3edge ranrun
 
@@ -65,6 +75,9 @@ ranrun: $(OBJECTS4)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS4) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 	
 Photrun: $(OBJECTS)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+	
+interact: $(OBJECTS5)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 eigenSolve.o:
@@ -90,6 +103,8 @@ phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class
 3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
 
 ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
+
+interact.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
 
 clean::
 	rm obj/*o mod/*.mod Photrun 3edge ranrun

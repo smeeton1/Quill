@@ -337,7 +337,9 @@ implicit none
   
   n=size(A,1)
   allocate(v(n))
+  write(*,*)'e1'
   call eigen(A,v)
+  write(*,*)'e2'
   ent=0
   do i=1,n
     ent=v(i)*log(v(i))
@@ -354,11 +356,7 @@ implicit none
   n=size(A,1)
   m=int(sqrt(real(n)))
   allocate(B(m,m))
-  do i =0,m-1
-    do j =1,m
-      B(i+1,j)=A(j+i*m)
-    enddo
-  enddo
+  call vec_to_mat(A,B)
   ent = VonNueE(B)
   deallocate(B)
  
@@ -374,6 +372,18 @@ implicit none
     norm = norm + real(conjg(A(j))*A(j))
   enddo
   
+ end function
+ 
+ complex(kdp) function Norm_vec(A) result(norm)
+  complex(kdp),dimension(:),intent(in)       :: A
+  integer				     :: i,n
+  
+  n=size(A)
+  norm=cmplx(0.0,0.0)
+  do i=1,n
+   norm =norm+conjg(A(i))*A(i)
+  enddo
+ 
  end function
  
 end module
