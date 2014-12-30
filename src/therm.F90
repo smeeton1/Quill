@@ -106,9 +106,10 @@ implicit none
  
  end subroutine
  
- subroutine ele_tran(H,rho,Tend,v,r,filename,strength,T,coli,sink,conect)
+ subroutine ele_tran(H,rho,Tend,dt,v,r,filename,strength,T,coli,sink,conect)
   complex(kdp), dimension(:,:), intent(in)     :: H
   complex(kdp), dimension(:), intent(inout)    :: rho
+  real(kdp), intent(in)                        :: dt
   integer, intent(in)                          :: Tend, sink
   integer, dimension(:), intent(in)            :: conect
   complex(kdp), intent(in)                     :: strength, T, coli
@@ -154,7 +155,7 @@ implicit none
   call extract_pointerS(rho, psi(1,1:n))
  
   do i=1,Tend
-    call expm(SO,real(i,kdp),rho,rho_out)
+    call expm(SO,dt*real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
   enddo
   if(r)then

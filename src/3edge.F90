@@ -72,22 +72,6 @@ program photest
         
     enddo
      
-    write(dirname,'(a,a,I5.5)')trim(dirnamebase),'interact',j 
-    call make_dir(dirname)
-    do l=1,11
-     alpha=real(l-1)*0.1
-     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-     do i=1,n
-       rho(i+(i-1)*n)=cmplx(1./n,0.0)
-     enddo
-!    rho(1)=cmplx(1.0,0)
-     write(filename,'(4a,F4.2)')trim(dirname),'/',trim(filenamebase),'interact',alpha
- 
-     rho2=rho
-     interact=cmplx(0.0,0.0)
- 
-     call Dir_2walker(D, rho,rho2, t, alpha, filename, r, interact)
-    enddo
       
     D2=D
 
@@ -151,7 +135,13 @@ program photest
        rhod(:)=cmplx(0,0);
        do i=1,n
         rhod(i+(i-1)*n)=cmplx(1./n,0.0)
+        rhod(i+(i-1)*n+1)=cmplx(1./n,0.0)
        enddo
+       
+       interact=get_Norm(rhod)
+       write(*,*)interact
+       
+       call write_Vec_real('rhod',rhod)
        write(filename,'(4a,2F4.2)')trim(dirname),'/',trim(filenamebase),'dis',alpha,beta
   
        call Dis_Dir_8line(rhod, err, alpha, beta, filename, r)

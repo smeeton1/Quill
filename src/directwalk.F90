@@ -171,6 +171,7 @@ implicit none
     endif
   enddo
 
+
  
   call B_SO_for_H((1-alpha)*H,SO)
    
@@ -211,7 +212,7 @@ implicit none
        D(i,i+2)=1*sca
     endif
   enddo
-
+  call write_Mat_real('H',H)
  
   call B_SO_for_H((1-alpha)*H,SO)    
   call Stand_to_SO(alpha*D,SO)
@@ -408,23 +409,22 @@ implicit none
 
  end subroutine
  
- subroutine Dir_2walker(D, rho1,rho2, t, alpha, filename, r, interact)
+ subroutine Dir_2walker(D, rho1,rho2, t, alpha, filename, interact)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho1,rho2
   real(kdp), intent(in)                        :: alpha
   complex(kdp),intent(in)                      :: interact
-  logical, intent(in)                          :: r
   integer, intent(in)                          :: t
   character(len=80),intent(in)                 :: filename
   real(kdp)                                    :: error
   integer                                      :: i,n
-  complex(kdp), dimension(:,:), allocatable    :: SO, psi
+  complex(kdp), dimension(:,:), allocatable    :: SO
   complex(kdp)                                 :: norm
-  complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com, rhoint,ent
+  complex(kdp), dimension(:), allocatable      :: rho_out ,rho_com, rhoint,ent, psi
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(t+1,n),rho_com(n*n*n*n),rhoint(n*n),ent(t))
+  allocate(SO(n*n*n*n,n*n*n*n),rho_out(n*n*n*n),psi(n),rho_com(n*n*n*n),rhoint(n*n),ent(t))
   
   SO(:,:)=cmplx(0,0)
  
@@ -432,29 +432,27 @@ implicit none
  ! call write_Mat('SO',SO)
  
   call k_product_vform(rho1,rho2,rho_com) 
-  call extract_pointerS(rho1, psi(1,:))
+  call extract_pointerS(rho1, psi)
   
-  call write_Vec(filename,rho_com)
+  call write_Vec(filename,psi)
 
   rho_out(:)=cmplx(0,0)
   do i=1,t
+    write(*,*)i
     call expm(SO,real(i,kdp),rho_com,rho_out)
     call par_traceA_vec(rho_out,rhoint)
-    !ent(i)=VonNueE_vec(rhoint)
-    call extract_pointerS(rhoint, psi(i+1,1:n))
+    call extract_pointerS(rhoint, psi)
+    call write_Vec_real(filename,psi)
+    write(*,*)'mid'
+    ent(i)=VonNueE_vec(rhoint)
+    write(*,*)i,'end'    
   enddo
-  if(r)then
-    call write_Mat_real(filename,psi)
-  else
-    call write_Mat(filename,psi)
-  endif
   
   !call write_moments(filename,psi)
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   do i=1,t
     write(4,"(a,2F7.3)")' entropy= ',abs(real(ent(i)))
   enddo
-  call write_Vec(filename,psi(2,1:n))
   norm= get_Norm(rho_out)
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   write(4,*)''
