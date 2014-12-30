@@ -118,12 +118,12 @@ implicit none
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: psi, SO
   complex(kdp)                                 :: norm
-  complex(kdp), dimension(:), allocatable      :: rho_out  
+  complex(kdp), dimension(:), allocatable      :: rho_out, ent 
   character(len=90)                            :: filename2
   
   n=size(H,1)
-  allocate(rho_out(n*n),psi(Tend+1,n),SO(n*n,n*n))
-  
+  allocate(rho_out(n*n),psi(Tend+1,n),SO(n*n,n*n),ent(Tend+1))
+  write(filename2,'(a,a)')filename,'-ent'
   if(coli.eq.0.0)then
     call ele_L_T(H,strength,T,sink,conect,SO)
   else
@@ -153,15 +153,19 @@ implicit none
   close(4) 
  ! call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,1:n))
+  ent(1)=RelativE_vec(rho)
  
   do i=1,Tend
     call expm(SO,dt*real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
+    ent(i)=RelativE_vec(rho_out)
   enddo
   if(r)then
     call write_Mat_real(filename,psi)
+    call write_Vec_real(filename2,ent)
   else
     call write_Mat(filename,psi)
+    call write_Vec_real(filename2,ent)
   endif
   
   !call write_moments(filename,psi)

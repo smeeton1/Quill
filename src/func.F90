@@ -362,7 +362,7 @@ implicit none
  
  end function
  
- real(kdp) function vec_norm(A) result(norm)
+ real(kdp) function vec_norm_real(A) result(norm)
   complex(kdp),dimension(:),intent(inout)    :: A
   integer				     :: j,n
   n=size(A)
@@ -383,6 +383,24 @@ implicit none
   do i=1,n
    norm =norm+conjg(A(i))*A(i)
   enddo
+ 
+ end function
+ 
+ complex(kdp) function RelativE_vec(A) result(ent)
+  complex(kdp),dimension(:),intent(in)       :: A
+  complex(kdp),dimension(:,:),allocatable    :: B
+  integer				     :: i,j,n,m
+  
+  n=size(A,1)
+  m=int(sqrt(real(n)))
+  allocate(B(m,m))
+  ent=cmplx(0.0,0.0)
+  do i=1,n
+   ent=ent+ B(i,i)*log(B(i,i))
+  enddo
+  call vec_to_mat(A,B)
+  ent = ent - VonNueE(B)
+  deallocate(B)
  
  end function
  
