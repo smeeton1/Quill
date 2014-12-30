@@ -236,11 +236,12 @@ implicit none
   integer                                      :: i,n
   complex(kdp), dimension(:,:), allocatable    :: SO, psi
   complex(kdp)                                 :: norm, moment1, moment2
-  complex(kdp), dimension(:), allocatable      :: rho_out  
+  complex(kdp), dimension(:), allocatable      :: rho_out,ent  
   character(len=90)                            :: filename2
   
   n=size(D,1)
-  allocate(SO(n*n,n*n),rho_out(n*n),psi(t+1,n))
+  allocate(SO(n*n,n*n),rho_out(n*n),psi(t+1,n),ent(t+1))
+  write(filename2,'(a,a)')filename,'-ent'
   
   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
   if(v)then
@@ -268,16 +269,20 @@ implicit none
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
   call extract_pointerS(rho, psi(1,1:n))
+  ent(1)= VonNueE_vec(rho)
  
   do i=1,t
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
+    ent(i)= VonNueE_vec(rho_out)
   enddo
   
   if(r)then
     call write_Mat_real(filename,psi)
+    call write_Vec_real(filename2,ent)
   else
     call write_Mat(filename,psi)
+    call write_Vec_real(filename2,ent)
   endif
   
   

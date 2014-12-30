@@ -58,8 +58,8 @@ program photest
   H(3,1)=5;H(3,2)=33.1;H(3,3)=0;H(3,4)=-51.1;H(3,5)=0.8;H(3,6)=-8.4;H(3,7)=7.6
   H(4,1)=-4.4;H(4,2)=6.8;H(4,3)=-51.1;H(4,4)=110;H(4,5)=-76.6;H(4,6)=-14.2;H(4,7)=-67
   H(5,1)=4.7;H(5,2)=4.5;H(5,3)=0.8;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=-0.1
-  H(6,1)=12.6;H(6,2)=7.4;H(6,3)=-8.4;H(6,4)=-14.2;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
-  H(7,1)=-6.2;H(7,2)=-0.3;H(7,3)=7.6;H(7,4)=-67;H(7,5)=-0.1;H(7,6)=-38.3;H(7,7)=230
+  H(6,1)=-12.6;H(6,2)=7.4;H(6,3)=-8.4;H(6,4)=-14.2;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
+  H(7,1)=-6.2;H(7,2)=-0.3;H(7,3)=7.6;H(7,4)=-67;H(7,5)=-0.1;H(7,6)=38.3;H(7,7)=230
  
   wc = 150; Er= 35
   do i=-2,2 
@@ -91,47 +91,47 @@ program photest
 !     call ele_tran(H,rho,Tend,v,r,filename,strength,tua,coli,sink,conect)
 !   enddo
 
-  deallocate(H,rho,conect)
+ ! deallocate(H,rho,conect)
   
-  m=5
-  p=5
-  n=m*p
-  sink=3+m*(p-1)
-
-  
-  allocate(H(n,n),rho(n*n),conect(3))
-  rho(:)=cmplx(0.0,0.0)
-    do i=1,m
-      rho(i+(i-1)*n)=cmplx(1./m,0.0)
-  enddo
-  conect(1)=2+m*(p-1)-1
-  conect(2)=2+m*(p-1)+1
-  conect(3)=2+m*(p-2)
-!   
-!   
+!   m=3
+!   p=5
+!   n=m*p
+!   sink=2+m*(p-1)
 ! 
-!  
-  do i=-2,2 
-   Temp = 273.0-real(i)*20; 
-   tua = cmplx((2*pi*kb*Temp*Er)/(hbar*hbar*wc),0.0)
-   do k=1,6
-    do j=1,6
-   
-     E=cmplx(100*(k-1)/Temp,0.0) 
-     Ve=cmplx(100*(j-1),0.0)
-     alpha= cmplx(1.0/Temp,0.0)
-     write(dirname,'(a,I2.2,a,I2.2,a,I3.3)')'results/lattex-',k,'-',j,'-',int(Temp)
-     call make_dir(dirname)
-     call make_lattic(H,E,Ve,alpha,m)
-     do l=1,11
-       coli=cmplx(real(l-1)*0.1,0.0)
-       write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(coli)
-       call ele_tran(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
-     enddo
-    enddo
-   enddo
-  enddo
-  
+!   
+!   allocate(H(n,n),rho(n*n),conect(3))
+!   rho(:)=cmplx(0.0,0.0)
+!     do i=1,m
+!       rho(i+(i-1)*n)=cmplx(1./m,0.0)
+!   enddo
+!   conect(1)=2+m*(p-1)-1
+!   conect(2)=2+m*(p-1)+1
+!   conect(3)=2+m*(p-2)
+! !   
+! !   
+! ! 
+! !  
+!   do i=-1,1 
+!    Temp = 273.0-real(i)*20; 
+!    tua = cmplx((2*pi*kb*Temp*Er)/(hbar*hbar*wc),0.0)
+!    do k=1,6
+!     do j=1,6
+!    
+!      E=cmplx(100*(k-1)/Temp,0.0) 
+!      Ve=cmplx(100*(j-1),0.0)
+!      alpha= cmplx(1.0/Temp,0.0)
+!      write(dirname,'(a,I2.2,a,I2.2,a,I3.3)')'results/lattex-',k,'-',j,'-',int(Temp)
+!      call make_dir(dirname)
+!      call make_lattic(H,E,Ve,alpha,m)
+!      do l=1,11
+!        coli=cmplx(real(l-1)*0.1,0.0)
+!        write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(coli)
+!        call ele_tran(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
+!      enddo
+!     enddo
+!    enddo
+!   enddo
+!   
 
 
 !  deallocate(array, eighold, work1, work2, leftvectors, rightvectors)
