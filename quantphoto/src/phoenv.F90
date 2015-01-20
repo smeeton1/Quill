@@ -26,53 +26,54 @@ program photest
 
   n=7
   err = 0.00001
-  Kb = 1.3806488e-23
+  Kb = 1.3806488e-3
   pi = 3.14159265359
-  Hbar = 1.0! 6.62606957e-34
+  Hbar = 1.0 !6.62606957e-34
   alpha = 0.8
   
-  Tend = 50
+  Tend = 150
   v = .false.
   r = .true.
   
 
   dt = 0.1
 
-  allocate(H(n,n),rho(n*n),conect(7))
-
-  conect(1)=1
-  conect(2)=2
-  conect(3)=3
-  conect(1)=4
-  conect(2)=5
-  conect(3)=6
-  conect(1)=7
-  
-  sink=3
-  strength=cmplx(0.5,0.0)
-  
-  rho(5+4*n)=cmplx(1.0,0.0)
-  
-  H(1,1)=200;H(1,2)=-96;H(1,3)=5;H(1,4)=-4.4;H(1,5)=4.7;H(1,6)=-12.6;H(1,7)=-6.2
-  H(2,1)=-96;H(2,2)=320;H(2,3)=33.1;H(2,4)=6.8;H(2,5)=4.5;H(2,6)=7.4;H(2,7)=-0.3
-  H(3,1)=5;H(3,2)=33.1;H(3,3)=0;H(3,4)=-51.1;H(3,5)=0.8;H(3,6)=-8.4;H(3,7)=7.6
-  H(4,1)=-4.4;H(4,2)=6.8;H(4,3)=-51.1;H(4,4)=110;H(4,5)=-76.6;H(4,6)=-14.2;H(4,7)=-67
-  H(5,1)=4.7;H(5,2)=4.5;H(5,3)=0.8;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=-0.1
-  H(6,1)=-12.6;H(6,2)=7.4;H(6,3)=-8.4;H(6,4)=-14.2;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
-  H(7,1)=-6.2;H(7,2)=-0.3;H(7,3)=7.6;H(7,4)=-67;H(7,5)=-0.1;H(7,6)=38.3;H(7,7)=230
- 
-  wc = 150; Er= 35
-  do i=-2,2 
-   Temp = 273.0-real(i)*20; 
-   tua = cmplx((2*pi*kb*Temp*Er)/(hbar*hbar*wc),0.0)
-   write(dirname,'(a,I3.3)')'results/photoFull',Int(Temp)
-   call make_dir(dirname)
-   do l=1,11
-     coli=cmplx(real(l-1)*0.1,0.0)
-     write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start5w',real(coli)
-     call ele_tran(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
-   enddo
-  enddo
+!   allocate(H(n,n),rho(n*n),conect(6))
+! 
+!   conect(1)=1
+!   conect(2)=2
+!   conect(3)=4
+!   conect(4)=5
+!   conect(5)=7
+!   conect(6)=6
+!   
+!   sink=3
+!   strength=cmplx(1.0,0.0)
+!   
+!   rho(7+6*n)=cmplx(1.0/3.0,0.0)
+!   rho(1)=cmplx(1.0/3.0,0.0)
+!   rho(6+5*n)=cmplx(1.0/3.0,0.0)
+!   
+!   H(1,1)=200;H(1,2)=-96;H(1,3)=5;H(1,4)=-4.4;H(1,5)=4.7;H(1,6)=-12.6;H(1,7)=-6.2
+!   H(2,1)=-96;H(2,2)=320;H(2,3)=33.1;H(2,4)=6.8;H(2,5)=4.5;H(2,6)=7.4;H(2,7)=-0.3
+!   H(3,1)=5;H(3,2)=33.1;H(3,3)=0;H(3,4)=-51.1;H(3,5)=0.8;H(3,6)=-8.4;H(3,7)=7.6
+!   H(4,1)=-4.4;H(4,2)=6.8;H(4,3)=-51.1;H(4,4)=110;H(4,5)=-76.6;H(4,6)=-14.2;H(4,7)=-67
+!   H(5,1)=4.7;H(5,2)=4.5;H(5,3)=0.8;H(5,4)=-76.6;H(5,5)=270;H(5,6)=78.3;H(5,7)=-0.1
+!   H(6,1)=-12.6;H(6,2)=7.4;H(6,3)=-8.4;H(6,4)=-14.2;H(6,5)=78.3;H(6,6)=420;H(6,7)=38.3
+!   H(7,1)=-6.2;H(7,2)=-0.3;H(7,3)=7.6;H(7,4)=-67;H(7,5)=-0.1;H(7,6)=38.3;H(7,7)=230
+!  
+!   wc = 0.150; Er= 0.035
+!   do i=-1,2 
+!    Temp = 273.0-real(i)*50; 
+!    tua = cmplx((kb*Temp)/(hbar*hbar),0.0)
+!    write(dirname,'(a,I3.3)')'results/photoFull',Int(Temp)
+!    call make_dir(dirname)
+!    do l=1,11
+!      coli=cmplx(real(l-1)*0.1,0.0)
+!      write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start5w',real(coli)
+!      call ele_tran(hbar*H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
+!    enddo
+!   enddo
 
 ! 
 !   H(1,1)=200;H(1,2)=-96;H(1,3)=0;H(1,4)=0;H(1,5)=0;H(1,6)=0;H(1,7)=0
@@ -93,46 +94,80 @@ program photest
 
  ! deallocate(H,rho,conect)
   
-!   m=3
-!   p=5
-!   n=m*p
-!   sink=2+m*(p-1)
-! 
+  m=3
+  p=4
+  n=m*p
+  sink=2+m*(p-1)
+
+  
+  allocate(H(n,n),rho(n*n),conect(3))
+  rho(:)=cmplx(0.0,0.0)
+    do i=1,m
+      rho(i+(i-1)*n)=cmplx(1./m,0.0)
+  enddo
+  conect(1)=2+m*(p-1)-1
+  conect(2)=2+m*(p-1)+1
+  conect(3)=2+m*(p-2)
 !   
-!   allocate(H(n,n),rho(n*n),conect(3))
-!   rho(:)=cmplx(0.0,0.0)
-!     do i=1,m
-!       rho(i+(i-1)*n)=cmplx(1./m,0.0)
-!   enddo
-!   conect(1)=2+m*(p-1)-1
-!   conect(2)=2+m*(p-1)+1
-!   conect(3)=2+m*(p-2)
-! !   
-! !   
-! ! 
-! !  
-!   do i=-1,1 
-!    Temp = 273.0-real(i)*20; 
-!    tua = cmplx((2*pi*kb*Temp*Er)/(hbar*hbar*wc),0.0)
+!   
+! 
+  strength=cmplx(3.0,0.0) 
+  do i=1,2 
+   Temp = 20.0-real(i)*5; 
+   tua = cmplx((kb*Temp)/(hbar*hbar),0.0)
+   do k=1,6
+    do j=1,6
+   
+     E=cmplx((k),0.0) 
+     Ve=cmplx(-1*(j),0.0)
+     alpha= cmplx(1.0/Temp*10,0.0)
+     write(dirname,'(a,I2.2,a,I2.2,a,I3.3)')'results/lattex-',k,'-',j,'-',int(Temp)
+     call make_dir(dirname)
+     call make_lattic(H,E,Ve,alpha,m)
+     do l=1,5
+       coli=cmplx(real(l-1)*0.25,0.0)
+       write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(coli)
+       call ele_tran(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
+     enddo
+    enddo
+   enddo
+  enddo
+  
+!   do i=-2,2 
+!    Temp = 20.0-real(i)*5; 
+!    tua = cmplx((kb*Temp)/(hbar*hbar),0.0)
 !    do k=1,6
 !     do j=1,6
 !    
-!      E=cmplx(100*(k-1)/Temp,0.0) 
-!      Ve=cmplx(100*(j-1),0.0)
-!      alpha= cmplx(1.0/Temp,0.0)
-!      write(dirname,'(a,I2.2,a,I2.2,a,I3.3)')'results/lattex-',k,'-',j,'-',int(Temp)
+!      E=cmplx((k),0.0) 
+!      Ve=cmplx(-1*(j),0.0)
+!      alpha= cmplx(1.0/Temp*10,0.0)
+!      write(dirname,'(a,I2.2,a,I2.2,a,I3.3)')'results/h-dlattex-',k,'-',j,'-',int(Temp)
 !      call make_dir(dirname)
 !      call make_lattic(H,E,Ve,alpha,m)
-!      do l=1,11
-!        coli=cmplx(real(l-1)*0.1,0.0)
+!      do l=1,5
+!        coli=cmplx(real(l-1)*0.25,0.0)
 !        write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(coli)
-!        call ele_tran(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
+!        call ele_tran2(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
 !      enddo
 !     enddo
 !    enddo
 !   enddo
-!   
-
+  
+!   do i=0,4
+!    strength=cmplx(real(i),0.0)
+!    Temp = 10.0; 
+!    tua = cmplx((kb*Temp)/(hbar*hbar),0.0)
+!    E=cmplx(1,0.0) 
+!    Ve=cmplx(-1,0.0)
+!    alpha= cmplx(1.0/Temp*10,0.0)
+!    write(dirname,'(a)')'results/lattex-s'
+!    call make_dir(dirname)
+!    call make_lattic(H,E,Ve,alpha,m)
+!    coli=cmplx(0.0,0.0)
+!    write(filename,'(a,a,a,F4.2)')trim(dirname),'/','start1r-',real(i)
+!    call ele_tran2(H,rho,Tend,dt,v,r,filename,strength,tua,coli,sink,conect)
+!   enddo
 
 !  deallocate(array, eighold, work1, work2, leftvectors, rightvectors)
 !  deallocate(rho, H, theta0, theta1, theta2, tot)
