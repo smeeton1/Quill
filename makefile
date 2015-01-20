@@ -63,7 +63,7 @@ OBJECTS5 = $(path)supperoperator.o          \
 	   $(path)directwalk.o          \
 	   $(path)interact.o	
 
-All: Photrun 3edge ranrun
+All: Photrun 3edge ranrun interact
 
 $(path)%.o : src/%.F90
 	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) -o $@ -J$(BINDIR)
@@ -78,7 +78,7 @@ Photrun: $(OBJECTS)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 	
 interact: $(OBJECTS5)
-	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS5) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 eigenSolve.o:
 

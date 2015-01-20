@@ -156,7 +156,22 @@ module until
   open(4,file=filename,ACCESS='append',ACTION='write')
   write(4,*)''
   do i=1,n
-    write(4,"(F15.10,a)",ADVANCE='no')real(vec(i)),' '
+    write(4,"(F25.10,a)",ADVANCE='no')real(vec(i)),' '
+  enddo
+  close(4)
+ 
+ end subroutine
+ 
+  subroutine write_Vec_real_noline(filename,vec)
+  complex(kdp),dimension(:),intent(in)  :: vec
+  character(len=80),intent(in)          :: filename 
+  integer                               :: n, i
+
+  n=size(vec)
+
+  open(4,file=filename,ACCESS='append',ACTION='write')
+  do i=1,n
+    write(4,"(F25.10,a)",ADVANCE='no')real(vec(i)),' '
   enddo
   close(4)
  

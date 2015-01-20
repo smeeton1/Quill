@@ -162,6 +162,24 @@ implicit none
     
  end subroutine
  
+ subroutine L_make_1(D)
+  complex(kdp), dimension(:,:), intent(inout)  :: D
+  integer                                      :: i,j,n
+  complex(kdp)                                 :: row, col
+
+  n=size(D,1)
+  row=cmplx(0.0,0.0)
+  col=cmplx(0.0,0.0)
+  do i=1,n
+    do j=1,n
+       row=row+D(i,j)
+       col=col+D(j,i)
+    enddo
+    D(i,i)=D(i,i)+row-col
+  enddo
+
+ end subroutine
+ 
  subroutine vec_to_mat(A,B)
   complex(kdp),dimension(:,:),intent(inout)  :: B
   complex(kdp),dimension(:),intent(in)       :: A
@@ -293,19 +311,11 @@ implicit none
   q=int(sqrt(real(m)))
   allocate(C(p,p),D(q,q))
 
-  do i =0,p-1
-    do j =1,p
-      C(i+1,j)=A(j+i*p)
-    enddo
-  enddo
-  
-  call par_traceA(C,D)
 
-  do i =0,q-1
-    do j =1,q
-      B(j+i*p)=D(i+1,j)
-    enddo
-  enddo
+  call vec_to_mat(A,C)
+  call par_traceA(C,D)
+  call mat_to_vec(D,B)
+
 
   deallocate(C,D)
   
@@ -320,14 +330,42 @@ implicit none
   m=size(A,1)
   B(:,:)=cmplx(0,0)
   
-  do i=0,n-1
-   do j=0,n-1
-    do k=1,n
-      B(i,j)=B(i,j)+ A(i*n+k,j*n+(n-k+1))
+  do i=1,n
+   do j=1,n
+    do k=0,n-1
+      if(i.eq.j)then
+       B(i,j)=B(i,j)+ A(i+k*n,j+(k*n))
+      else if(i.gt.j)then
+       B(i,j)=B(i,j)+ A((i-1)*n+k*n,(j-1)*n+(k*n))
+      else
+       B(i,j)=B(i,j)+ A((i-1)*n+k*n,j*n+(k*n))
+      endif
     enddo
    enddo
   enddo
  
+ end subroutine
+ 
+ subroutine par_traceB_vec(A,B)
+  complex(kdp),dimension(:),intent(inout)    :: B
+  complex(kdp),dimension(:),intent(in)       :: A
+  complex(kdp),dimension(:,:),allocatable    :: C , D
+  integer				     :: i,j,k,l,n,m,p,q
+  
+  m=size(B,1)
+  n=size(A,1)
+  p=int(sqrt(real(n)))
+  q=int(sqrt(real(m)))
+  allocate(C(p,p),D(q,q))
+
+
+  call vec_to_mat(A,C)
+  call par_traceB(C,D)
+  call mat_to_vec(D,B)
+
+
+  deallocate(C,D)
+  
  end subroutine
  
  complex(kdp) function VonNueE(A) result(ent)
@@ -337,12 +375,12 @@ implicit none
   
   n=size(A,1)
   allocate(v(n))
-  write(*,*)'e1'
   call eigen(A,v)
-  write(*,*)'e2'
   ent=0
   do i=1,n
-    ent=v(i)*log(v(i))
+    if(v(i).ne.cmplx(0.0,0.0))then
+     ent=ent + v(i)*log(v(i))
+    endif
   enddo
   deallocate(v)
  
@@ -362,29 +400,7 @@ implicit none
  
  end function
  
- real(kdp) function vec_norm_real(A) result(norm)
-  complex(kdp),dimension(:),intent(inout)    :: A
-  integer				     :: j,n
-  n=size(A)
 
-  norm=0.0
-  do j=1,n
-    norm = norm + real(conjg(A(j))*A(j))
-  enddo
-  
- end function
- 
- complex(kdp) function Norm_vec(A) result(norm)
-  complex(kdp),dimension(:),intent(in)       :: A
-  integer				     :: i,n
-  
-  n=size(A)
-  norm=cmplx(0.0,0.0)
-  do i=1,n
-   norm =norm+conjg(A(i))*A(i)
-  enddo
- 
- end function
  
  complex(kdp) function RelativE_vec(A) result(ent)
   complex(kdp),dimension(:),intent(in)       :: A
@@ -394,14 +410,16 @@ implicit none
   n=size(A,1)
   m=int(sqrt(real(n)))
   allocate(B(m,m))
-  ent=cmplx(0.0,0.0)
-  do i=1,n
-   ent=ent+ B(i,i)*log(B(i,i))
-  enddo
   call vec_to_mat(A,B)
+  ent=cmplx(0.0,0.0)
+  do i=1,m
+   if(B(i,i).ne.cmplx(0.0,0.0))then
+    ent=ent + B(i,i)*log(B(i,i))
+   endif
+  enddo
   ent = ent - VonNueE(B)
   deallocate(B)
- 
+  
  end function
  
 end module

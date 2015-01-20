@@ -68,8 +68,34 @@ module Densutil
       j=i
     endif
   enddo
-
-
+  
  end subroutine
+  
+ complex(kdp) function Norm_vec(A) result(norm)
+  complex(kdp),dimension(:),intent(in)       :: A
+  integer				     :: i,n
+  
+  n=size(A)
+  norm=cmplx(0.0,0.0)
+  do i=1,n
+   norm =norm+conjg(A(i))*A(i)
+  enddo
+ 
+ end function
+ 
+ real(kdp) function vec_norm_real(A) result(norm)
+  complex(kdp),dimension(:),intent(inout)    :: A
+  integer				     :: j,n
+  n=size(A)
+
+  norm=0.0
+  do j=1,n
+    norm = norm + real(conjg(A(j))*A(j))
+  enddo
+  
+ end function
+
+
+
 
 end module
