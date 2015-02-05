@@ -222,20 +222,20 @@ implicit none
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
   call extract_pointerS(rho, psi(1,1:n))
-  ent(1)= VonNueE_vec(rho)
+!  ent(1)= VonNueE_vec(rho)
  
   do i=1,t
     call expm(SO,real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
-    ent(i+1)= abs(VonNueE_vec(rho_out))
+!    ent(i+1)= abs(VonNueE_vec(rho_out))
   enddo
   
   if(r)then
     call write_Mat_real(filename,psi)
-    call write_Vec_real(filename2,ent)
+!    call write_Vec_real(filename2,ent)
   else
     call write_Mat(filename,psi)
-    call write_Vec_real(filename2,ent)
+!    call write_Vec_real(filename2,ent)
   endif
   
   
@@ -444,11 +444,10 @@ implicit none
   enddo
 
   rho_out(:)=cmplx(0,0)
-  
-  Dcom=D*cmplx(0.0,1.0)
+
   
   do i=1,t
-    call expm(Dcom,real(i,kdp),rho,rho_out)
+    call expm(D,real(i,kdp),rho,rho_out)
     do j=1,n
      psi(i+1,j)=conjg(rho_out(j))*rho_out(j)
     enddo
