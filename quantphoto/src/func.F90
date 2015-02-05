@@ -180,6 +180,22 @@ implicit none
 
  end subroutine
  
+  subroutine class_lap(D)
+  complex(kdp), dimension(:,:), intent(inout)  :: D
+  integer                                      :: i,j,n
+  complex(kdp)                                 :: row
+
+  n=size(D,1)
+  row=cmplx(0.0,0.0)
+  do i=1,n
+    do j=1,n
+       row=row+D(i,j)
+    enddo
+    D(i,i)=D(i,i)-row
+  enddo
+
+ end subroutine
+ 
  subroutine vec_to_mat(A,B)
   complex(kdp),dimension(:,:),intent(inout)  :: B
   complex(kdp),dimension(:),intent(in)       :: A
