@@ -43,7 +43,7 @@ program photest
  
  err=0.000001
 !   n=3
-   t=100
+   t=200
    alpha=0.8
   allocate(D(n,n),rho(n*n),p(n),D2(n,n),rho2(n*n),rhod(16*16))
 
@@ -66,63 +66,64 @@ program photest
 !      do i=1,n
 !        rho(i+(i-1)*n)=cmplx(1./n,0.0)
 !      enddo
-     rho(n*n)=cmplx(1.0,0)
+     rho(1)=cmplx(1.0,0)
      write(filename,'(3a,F4.2)')trim(dirname),'/',trim(filenamebase),alpha
 
-     call Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+     call Dir_Gra_Run(D, rho, t, 0.1, alpha, filename, v, r)
         
     enddo
      
       
-    D2=D
-
-    call row_norm(D)
-
+!     D2=D
+! 
+!     call row_norm(D)
+! 
+! !     
+!     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!     do i=1,n
+!       rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!     enddo
+!     call extract_pointerS(rho, p)
 !     
-    rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-    do i=1,n
-      rho(i+(i-1)*n)=cmplx(1./n,0.0)
-    enddo
-    call extract_pointerS(rho, p)
-    
-    call col_norm(D2)
-    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-    write(4,*)' '
-    write(4,*)'------------------------------------------------------------------------------'
-    write(4,*)'itarive quantum row normalized'
-    close(4)
-
-    call Dir_Gra_Con(D, rho, err, alpha, filename, r)
-
-    
-    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-    write(4,*)' '
-    write(4,*)'------------------------------------------------------------------------------'
-    write(4,*)'itarive class'
-    close(4)
-
-    call pagerank_it(transpose(D), p, err, alpha, filename)
-
-       
-    open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-    write(4,*)' '
-    write(4,*)'------------------------------------------------------------------------------'
-    write(4,*)'eigenvalue class'
-    close(4)
-
-     call pagerank_ei(transpose(D), p, alpha, filename, work)
+!     call col_norm(D2)
+!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!     write(4,*)' '
+!     write(4,*)'------------------------------------------------------------------------------'
+!     write(4,*)'itarive quantum row normalized'
+!     close(4)
+! 
+!     call Dir_Gra_Con(D, rho, err, alpha, filename, r)
+! 
+!     
+!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!     write(4,*)' '
+!     write(4,*)'------------------------------------------------------------------------------'
+!     write(4,*)'itarive class'
+!     close(4)
+! 
+!     call pagerank_it(transpose(D), p, err, alpha, filename)
+! 
+!        
+!     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!     write(4,*)' '
+!     write(4,*)'------------------------------------------------------------------------------'
+!     write(4,*)'eigenvalue class'
+!     close(4)
+! 
+!     call pagerank_ei(transpose(D), p, alpha, filename, work)
      
     
 
     enddo  
     
     D2=D
-    do i=1,n
-     p(i)=cmplx(1/sqrt(real(n)),0.0)
-    enddo
+!     do i=1,n
+!      p(i)=cmplx(1/sqrt(real(n)),0.0)
+!     enddo
+    p(n)=cmplx(1.0,0.0)
     call class_lap(D2)
     write(filename,'(3a)')trim(dirname),'/','justgamma' 
-    call Dir_justgamma(D2, p, t, filename, r)
+    call Dir_justgamma(D2, p, t, 0.1, filename, r, .true.)
     
 !     call row_norm(D)
 !     write(filename,'(3a)')trim(dirname),'/','justgammarownorm' 
@@ -135,8 +136,7 @@ program photest
 !     call L_make_1(D2)
 !     write(filename,'(3a)')trim(dirname),'/','justgammaL' 
 !     call Dir_justgamma(transpose(D2), p, t, filename, r)
-    
-  enddo
+
 
   
 

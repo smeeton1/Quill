@@ -179,11 +179,12 @@ implicit none
  ! extract the pointer states for each step.
  ! if v is true more details are wrten to the file 
  ! if r is true only writes out the real part of the pointer states.
- subroutine Dir_Gra_Run(D, rho, t, alpha, filename, v, r)
+ subroutine Dir_Gra_Run(D, rho, t, a, alpha, filename, v, r)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho
   real(kdp), intent(in)                        :: alpha
   integer, intent(in)                          :: t
+  real, intent(in)                             :: a
   logical, intent(in)                          :: v, r
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
@@ -225,7 +226,7 @@ implicit none
 !  ent(1)= VonNueE_vec(rho)
  
   do i=1,t
-    call expm(SO,real(i,kdp),rho,rho_out)
+    call expm(SO,a*real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
 !    ent(i+1)= abs(VonNueE_vec(rho_out))
   enddo
@@ -402,7 +403,7 @@ implicit none
     call par_traceA_vec(rho_out,rhoint)
     call extract_pointerS(rhoint, psi)
     call write_Vec_real_noline(filename,psi)
-    ent(i)=abs(VonNueE_vec(rhoint)) 
+    !ent(i)=abs(VonNueE_vec(rhoint)) 
     call par_traceB_vec(rho_out,rhoint)
     call extract_pointerS(rhoint, psi)
     call write_Vec_real_noline(filename3,psi)
@@ -410,7 +411,7 @@ implicit none
   
   !call write_moments(filename,psi)
  ! open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  call write_Vec_real(filename2,ent)
+  !call write_Vec_real(filename2,ent)
   norm= get_Norm(rho_out)
 !   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
 !   write(4,*)''
@@ -422,11 +423,12 @@ implicit none
 
  end subroutine
  
-  subroutine Dir_justgamma(D, rho, t, filename, r)
+  subroutine Dir_justgamma(D, rho, t, a, filename, r, c)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho
-  logical, intent(in)                          :: r
+  logical, intent(in)                          :: r,c
   integer, intent(in)                          :: t
+  real, intent(in)                             :: a
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n,j
   complex(kdp), dimension(:,:), allocatable    :: psi,Dcom
@@ -438,19 +440,27 @@ implicit none
   allocate(rho_out(n),psi(t+1,n),Dcom(n,n))
 
  ! call write_Mat('SO',SO)
- 
-  do j=1,n
+  if(c)then
+   psi(1,:)=rho
+  else
+   do j=1,n
     psi(1,j)=conjg(rho(j))*rho(j)
-  enddo
+   enddo
+  endif
+  
 
   rho_out(:)=cmplx(0,0)
 
   
   do i=1,t
-    call expm(D,real(i,kdp),rho,rho_out)
-    do j=1,n
-     psi(i+1,j)=conjg(rho_out(j))*rho_out(j)
-    enddo
+    call expm(D,a*real(i,kdp),rho,rho_out)
+    if(c)then
+      psi(i+1,:)=rho_out
+    else
+      do j=1,n
+        psi(i+1,j)=conjg(rho_out(j))*rho_out(j)
+      enddo
+    endif
   enddo
   if(r)then
     call write_Mat_real(filename,psi)
@@ -464,10 +474,10 @@ implicit none
 
   call write_Vec(filename,psi(2,1:n))
   norm= vec_norm_real(rho_out)
-  open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
-  write(4,*)''
-  write(4,"(a,2F7.3)")' norm= ',norm
-  close(4)
+!   open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
+!   write(4,*)''
+!   write(4,"(a,2F7.3)")' norm= ',norm
+!   close(4)
 
   
   deallocate(rho_out,psi)
