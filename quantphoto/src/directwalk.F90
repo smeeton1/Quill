@@ -442,7 +442,9 @@ implicit none
  ! call write_Mat('SO',SO)
   if(c)then
    psi(1,:)=rho
+   Dcom=D
   else
+   Dcom=cmplx(0.0,1.0)*D
    do j=1,n
     psi(1,j)=conjg(rho(j))*rho(j)
    enddo
@@ -453,7 +455,7 @@ implicit none
 
   
   do i=1,t
-    call expm(D,a*real(i,kdp),rho,rho_out)
+    call expm(Dcom,a*real(i,kdp),rho,rho_out)
     if(c)then
       psi(i+1,:)=rho_out
     else
