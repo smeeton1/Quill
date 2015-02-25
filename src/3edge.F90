@@ -61,7 +61,7 @@ program photest
     write(filename,'(3a)')trim(dirname),'/','D'
     call write_Mat(filename,D)
     do l=1,11
-     alpha=real(l-1)*0.1
+     alpha=real(l-1)*0.01
      rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
 !      do i=1,n
 !        rho(i+(i-1)*n)=cmplx(1./n,0.0)
@@ -72,7 +72,15 @@ program photest
      call Dir_Gra_Run(D, rho, t, 0.1, alpha, filename, v, r)
         
     enddo
-     
+
+     rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
+!      do i=1,n
+!        rho(i+(i-1)*n)=cmplx(1./n,0.0)
+!      enddo
+     rho(1)=cmplx(1.0,0)
+     write(filename,'(3a,F4.2)')trim(dirname),'/',trim(filenamebase),1.0
+     alpha=1.0
+     call Dir_Gra_Run(D, rho, t, 0.1, alpha, filename, v, r)
       
 !     D2=D
 ! 
