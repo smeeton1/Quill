@@ -97,12 +97,12 @@ implicit none
  ! extract the pointer states for each step.
  ! if v is true more details are wrten to the file 
  ! if r is true only writes out the real part of the pointer states.
- subroutine Dir_Gra_Run(D, rho, t, a, alpha, filename, v, r)
+ subroutine Dir_Gra_Run(D, rho, t, dt, alpha, filename, v, r)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho
   real(kdp), intent(in)                        :: alpha
   integer, intent(in)                          :: t
-  real, intent(in)                             :: a
+  real, intent(in)                             :: dt
   logical, intent(in)                          :: v, r
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n
@@ -144,7 +144,7 @@ implicit none
 !  ent(1)= VonNueE_vec(rho)
  
   do i=1,t
-    call expm(SO,a*real(i,kdp),rho,rho_out)
+    call expm(SO,dt*real(i,kdp),rho,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))
 !    ent(i+1)= abs(VonNueE_vec(rho_out))
   enddo
@@ -192,11 +192,12 @@ implicit none
   character(len=90)                            :: filename2
   
   n=size(D,1)
+  write(*,*)n
   allocate(SO(n*n,n*n),rho_out(n*n),psi(2,n))
   
   SO(:,:)=cmplx(0,0)
   call L_make_DG(SO,D,alpha)
- ! call write_Mat('SO',SO)
+  call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,:))
   i=1
   error=1
@@ -285,12 +286,12 @@ implicit none
 
  end subroutine
  
-  subroutine Dir_justgamma(D, rho, t, a, filename, r, c)
+  subroutine Dir_justgamma(D, rho, t, dt, filename, r, c)
   complex(kdp), dimension(:,:), intent(in)     :: D
   complex(kdp), dimension(:), intent(inout)    :: rho
   logical, intent(in)                          :: r,c
   integer, intent(in)                          :: t
-  real, intent(in)                             :: a
+  real, intent(in)                             :: dt
   character(len=80),intent(in)                 :: filename
   integer                                      :: i,n,j
   complex(kdp), dimension(:,:), allocatable    :: psi,Dcom
@@ -317,7 +318,7 @@ implicit none
 
   
   do i=1,t
-    call expm(Dcom,a*real(i,kdp),rho,rho_out)
+    call expm(Dcom,dt*real(i,kdp),rho,rho_out)
     if(c)then
       psi(i+1,:)=rho_out
     else
