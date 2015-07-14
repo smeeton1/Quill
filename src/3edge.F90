@@ -13,13 +13,13 @@ program photest
 
  
   integer, parameter :: EP = selected_real_kind(15)
-  integer                                      :: i, j,k, n,t,l
+  integer                                      :: i, j,k, n,t,l,start
   real(EP)                                     :: alpha, err, beta
   complex(EP)                                  :: interact
   complex(EP), dimension(:,:), allocatable     :: D,D2
   complex(EP), dimension(:), allocatable       :: rho, p, rho2, rhod,TE1,TE2,TE3
-  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase,filename2
-  logical                                      :: v, r, work
+  character(len=80)                            :: fmt,filename,dirname,infile,time,nn,AALPHA,filenamebase,dirnamebase,filename2,init
+  logical                                      :: v, r, work,suppos
   
   
   
@@ -28,8 +28,16 @@ program photest
  CALL GET_COMMAND_ARGUMENT(3,dirnamebase)
  CALL GET_COMMAND_ARGUMENT(4,nn)
  CALL GET_COMMAND_ARGUMENT(5,time)
+ CALL GET_COMMAND_ARGUMENT(5,init)
  read(nn,*)n
  read(time,*)k
+ if(init.eq.'S')then 
+ suppos=.true.
+ else
+ read(time,*)start
+ suppos=.false. 
+ endif
+ 
  
 !  allocate(TE1(9),TE2(9),TE3(81))
 !  TE1(1)=1./3.;TE1(2)=0;TE1(3)=0;TE1(4)=0;TE1(5)=1./3.;TE1(6)=0;TE1(7)=0;TE1(8)=0;TE1(9)=1./3.;
@@ -64,9 +72,13 @@ program photest
     do l=1,1!1
      alpha=real(l-1)*0.1
      rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
-     do i=1,n
-       rho(i+(i-1)*n)=cmplx(1./n,0.0)
-     enddo
+     if(suppos)then
+       do i=1,n
+          rho(i+(i-1)*n)=cmplx(1./n,0.0)
+       enddo
+     else
+       rho(start+(start-1)*n)=cmplx(1.,0.0)
+     endif
 !      rho(1)=cmplx(1.0,0)
 !     write(filename,'(3a,F4.2)')trim(dirname),'/',trim(filenamebase),alpha
      open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
@@ -78,6 +90,7 @@ program photest
 !     call Dir_Gra_Run(D, rho, t, 0.1, alpha, filename, v, r)
         
     enddo
+    if(suppos)then
 
 !      rho(:)=cmplx(0,0);!rho(1)=cmplx(1./3.,0);rho(5)=cmplx(1./3.,0);rho(9)=cmplx(1./3.,0)
 ! !      do i=1,n
@@ -109,6 +122,7 @@ program photest
 !     call Dir_Gra_Con(D, rho, err, alpha, filename, r)
 ! 
 !   
+
      write(filename,'(4a,F4.2)')trim(dirname),'/',trim(filenamebase),'class',alpha
     open(4,file=filename,STATUS='unknown',ACCESS='append',ACTION='write')
     write(4,*)' '
@@ -127,7 +141,7 @@ program photest
 
     call pagerank_ei(transpose(D), p, alpha, filename, work)
      
-    
+    endif
 
     enddo  
     

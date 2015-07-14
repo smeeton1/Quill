@@ -7,9 +7,9 @@ ifeq ($(MA), mine)
  FLAGS = -w
  LIB =   -I /usr/lib/openmpi/include/ -I /usr/include -I /usr/local/lib/ -lfftw3 -llapack -lm
 else
- FLINKER = gfortran
+ FLINKER = ftn
  FLAGS = -w
- LIB =  -L$(FFTW_LIB) -lfftw3 -llapack -lf77blas -lcblas -latlas 
+ LIB =  -L$(FFTW_LIB) -lfftw3  
 endif
 
 
