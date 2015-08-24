@@ -87,7 +87,7 @@ implicit none
        D(i,i+2)=1*sca
     endif
   enddo
-  call write_Mat_real('H',H)
+  !call write_Mat_real('H',H)
  
   call B_SO_for_H((1-alpha)*H,SO)    
   call Stand_to_SO(alpha*D,SO)
@@ -114,11 +114,11 @@ implicit none
 
   do i=1,n
     if(mod(i,2).eq.0)then
-       H(i,i)=-1*sca
-       H(i,i-1)=1*sca
+       Hc(i,i)=-1*sca
+       Hc(i,i-1)=1*sca
     else
-       H(i,i)=1*sca
-       H(i,i+1)=1*sca
+       Hc(i,i)=1*sca
+       Hc(i,i+1)=1*sca
     endif
   enddo
 
@@ -145,7 +145,7 @@ implicit none
   call Stand_to_SO(alpha*D,SO)
  
 
-  deallocate(H,D)
+  deallocate(Hc,Ht,D)
 
  end subroutine
   
@@ -153,7 +153,8 @@ implicit none
  !Performs a directional walk for a discreet walker on an 8 node line
  subroutine Dis_Dir_8line(rho, t, alpha, beta, filename, r)
   complex(kdp), dimension(:), intent(inout)    :: rho
-  real(kdp), intent(in)                        :: alpha,beta,err
+  real(kdp), intent(in)                        :: alpha,beta
+  integer, intent(in)                          :: t
   logical, intent(in)                          :: r
   character(len=80),intent(in)                 :: filename
   real(kdp)                                    :: error
@@ -168,8 +169,8 @@ implicit none
   
   SOC(:,:)=cmplx(0,0)
   SOT(:,:)=cmplx(0,0)
-  call L_make_DDsF(SOC,alpha)
-  !call L_make_DTDG(SOT,beta)
+  call L_make_DCDG(SOC,alpha)
+  call L_make_DTDG(SOT,beta)
   
  ! call write_Mat('SO',SO)
   call extract_pointerS(rho, psi(1,:))
@@ -177,6 +178,7 @@ implicit none
   i=1
   error=1
   rho_out=rho
+  SOC=matmul(SOC,SOT)
   do i=0,t
     rho_out= matmul(SOC,rho_out)
     call extract_pointerS(rho_out, psi(i+1,1:n))

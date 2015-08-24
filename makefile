@@ -62,8 +62,17 @@ OBJECTS5 = $(path)supperoperator.o          \
 	   $(path)class.o          \
 	   $(path)directwalk.o          \
 	   $(path)interact.o	
+	   
+OBJECTS6 = $(path)supperoperator.o          \
+	   $(path)eigenSolve.o            \
+	   $(path)solver.o              \
+	   $(path)until.o		\
+	   $(path)Densutil.o		\
+	   $(path)func.o		\
+	   $(path)diswalk.o          \
+	   $(path)discreettest.o	
 
-All: Photrun 3edge ranrun interact
+All: Photrun 3edge ranrun interact discreettest
 
 $(path)%.o : src/%.F90
 	$(FLINKER) $(FLAGS) -c $< $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) -o $@ -J$(BINDIR)
@@ -79,6 +88,9 @@ Photrun: $(OBJECTS)
 	
 interact: $(OBJECTS5)
 	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS5) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
+	
+discreettest: $(OBJECTS6)
+	$(FLINKER) $(FLAGS) -o $@ $(OBJECTS6) $(LIB) $(PETSC_INCLUDE) $(PETSC_ARCH_INCLUDE) $(SLEPC_INCLUDE) $(SLEPC_LIB)
 
 eigenSolve.o:
 
@@ -98,6 +110,8 @@ therm.o: until.o solver.o Densutil.o func.o supperoperator.o
 
 Directwalk.o: until.o solver.o Densutil.o func.o supperoperator.o
 
+diswalk.o: until.o eigenSolve.o Densutil.o func.o supperoperator.o
+
 phoenv.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o func.o class.o therm.o
 
 3edge.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
@@ -106,8 +120,10 @@ ranrun.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o clas
 
 interact.o: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o directwalk.o
 
+discreettest.0: until.o supperoperator.o eigenSolve.o solver.o Densutil.o  func.o class.o diswalk.o
+
 clean::
-	rm obj/*o mod/*.mod Photrun 3edge ranrun
+	rm obj/*o mod/*.mod Photrun 3edge ranrun interact discreettest
 
 
 .DEFAULT_GOAL := Photrun

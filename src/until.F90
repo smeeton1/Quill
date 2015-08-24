@@ -153,7 +153,7 @@ module until
 
   n=size(vec)
 
-  open(4,file=filename,ACCESS='append',ACTION='write')
+  open(4,file=trim(filename),ACCESS='append',ACTION='write')
   write(4,*)''
   do i=1,n
     write(4,"(F25.10,a)",ADVANCE='no')real(vec(i)),' '

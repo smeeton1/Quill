@@ -53,7 +53,7 @@ program photest
 !   n=3
    t=200
    alpha=0.8
-  allocate(D(n,n),rho(n*n),p(n),D2(n,n),rho2(n*n),rhod(16*16))
+  allocate(D(n,n),rho(n*n),p(n),D2(n,n),rho2(n*n))
 
   v=.false.
   r=.true.
@@ -166,29 +166,6 @@ program photest
 !     write(filename,'(3a)')trim(dirname),'/','justgammaL' 
 !     call Dir_justgamma(transpose(D2), p, t, filename, r)
 
-
-  
-
-
-!  err=0.01
-!  n=16
-!  do l=1,11
-!      alpha=real(l-1)*0.1
-!      do k=1,11
-!        beta=real(l-1)*0.1
-!        rhod(:)=cmplx(0,0);
-!        do i=1,n
-!         rhod(i+(i-1)*n)=cmplx(1./n,0.0)
-!         rhod(i+(i-1)*n+1)=cmplx(1./n,0.0)
-!        enddo
-!        
-!        call write_Vec_real('rhod',rhod)
-!        write(filename,'(4a,2F4.2)')trim(dirname),'/',trim(filenamebase),'dis',alpha,beta
-!   
-!        call Dis_Dir_8line(rhod, err, alpha, beta, filename, r)
-!        
-!     enddo
-!  enddo
  
  99 continue
  
